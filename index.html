@@ -3,1261 +3,988 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NTL Office — Project Dashboard</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<title>NTL Office — Gantt Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-/* ═══════════════════════════════════════════════════════════
-   DESIGN TOKENS — DARK MODE (default, Paycent-inspired)
-═══════════════════════════════════════════════════════════ */
+/* ══ THEME VARIABLES ══════════════════════════════════ */
 :root {
-  --bg:          #0d1b2e;
-  --bg2:         #0a1628;
-  --surface:     #111f35;
-  --surface2:    #16283f;
-  --panel:       #1a2f4a;
-  --border:      rgba(255,255,255,.07);
-  --border2:     rgba(255,255,255,.13);
-  --text:        #e8eef8;
-  --text2:       #8fa3be;
-  --muted:       #4d6480;
-  --accent:      #4e8fff;
-  --accent2:     #00d4b4;
-  --warn:        #f5a623;
-  --danger:      #ff4d6a;
-  --done:        #00d4b4;
-  --purple:      #a78bfa;
-  --pink:        #f472b6;
-
-  /* gradients */
-  --grad-blue:   linear-gradient(135deg,#1a56db,#4e8fff);
-  --grad-teal:   linear-gradient(135deg,#0891b2,#00d4b4);
-  --grad-purple: linear-gradient(135deg,#7c3aed,#a78bfa);
-  --grad-amber:  linear-gradient(135deg,#d97706,#f5a623);
-  --grad-rose:   linear-gradient(135deg,#be185d,#f472b6);
-  --grad-green:  linear-gradient(135deg,#065f46,#10b981);
-
-  --mono:   'DM Mono', monospace;
-  --sans:   'Outfit', sans-serif;
-  --bar-h:  26px;
-  --row-h:  48px;
-  --radius: 14px;
-
-  --shadow-glow-blue:   0 0 20px rgba(78,143,255,.25);
-  --shadow-glow-teal:   0 0 20px rgba(0,212,180,.2);
-  --shadow-card:        0 8px 32px rgba(0,0,0,.4);
-  --shadow-sm:          0 2px 8px rgba(0,0,0,.3);
+  --bg:       #080c12;
+  --surface:  #0d1117;
+  --panel:    #111620;
+  --card:     #161e28;
+  --b1:       #1c2535;
+  --b2:       #243044;
+  --tx:       #dce8f5;
+  --sub:      #8a9db8;
+  --muted:    #4a5a72;
+  --dim:      #2e3e55;
+  --sub2:     #a0b4cc;
+  --accent:   #4f8fff;
+  --green:    #1fd6a0;
+  --amber:    #f6a92e;
+  --red:      #f44f6c;
+  --scroll-t: #0d1117;
+  --scroll-b: #1c2535;
+  --scroll-h: #243044;
+  --tr-hover: rgba(255,255,255,.012);
+  --tr-sub:   rgba(255,255,255,.005);
+  --tr-sub-h: rgba(255,255,255,.018);
+  --ov-grad:  linear-gradient(135deg,rgba(79,143,255,.06),rgba(160,106,248,.06));
 }
-
-/* ── LIGHT MODE ── */
 body.light {
-  --bg:          #eef2f8;
-  --bg2:         #e4eaf4;
-  --surface:     #ffffff;
-  --surface2:    #f5f8ff;
-  --panel:       #edf2fc;
-  --border:      rgba(0,0,0,.07);
-  --border2:     rgba(0,0,0,.13);
-  --text:        #0f1e34;
-  --text2:       #4a6080;
-  --muted:       #8a9bbb;
-  --shadow-card: 0 8px 32px rgba(0,0,0,.1);
-  --shadow-sm:   0 2px 8px rgba(0,0,0,.08);
+  --bg:       #f0f4fa;
+  --surface:  #ffffff;
+  --panel:    #f5f7fc;
+  --card:     #edf1f9;
+  --b1:       #dde3ef;
+  --b2:       #c8d2e4;
+  --tx:       #1a2236;
+  --sub:      #4a5a7a;
+  --muted:    #7a8aaa;
+  --dim:      #9aaac4;
+  --sub2:     #3a4a6a;
+  --accent:   #1a60e8;
+  --green:    #0d9a72;
+  --amber:    #c47a0a;
+  --red:      #d42048;
+  --scroll-t: #f0f4fa;
+  --scroll-b: #dde3ef;
+  --scroll-h: #c8d2e4;
+  --tr-hover: rgba(0,0,0,.02);
+  --tr-sub:   rgba(0,0,0,.01);
+  --tr-sub-h: rgba(0,0,0,.03);
+  --ov-grad:  linear-gradient(135deg,rgba(26,96,232,.06),rgba(109,55,184,.06));
 }
 
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+/* ── THEME TOGGLE BUTTON ── */
+.theme-toggle{
+  width:34px;height:20px;border-radius:20px;border:1px solid var(--b2);
+  background:var(--panel);cursor:pointer;position:relative;transition:all .3s;flex-shrink:0;
+}
+.theme-toggle::after{
+  content:'';position:absolute;top:2px;left:2px;
+  width:14px;height:14px;border-radius:50%;
+  background:var(--accent);transition:all .3s;
+}
+body.light .theme-toggle::after{ transform:translateX(14px); }
+.theme-icon{ font-size:13px;cursor:pointer;transition:transform .3s;user-select:none;flex-shrink:0 }
 
-html { scroll-behavior: smooth; }
+/* ══ BASE ══════════════════════════════════════════════ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--tx);font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;min-height:100vh;transition:background .3s,color .3s}
+a{color:inherit;text-decoration:none}
 
-body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: var(--sans);
-  font-size: 13px;
-  min-height: 100vh;
-  overflow-x: hidden;
-  -webkit-font-smoothing: antialiased;
-  transition: background .3s, color .3s;
-}
+/* ── TOP BAR ── */
+.topbar{display:flex;align-items:center;gap:12px;padding:10px 20px;
+  border-bottom:1px solid var(--b1);background:var(--surface);position:sticky;top:0;z-index:200;
+  transition:background .3s,border-color .3s}
+.logo{width:34px;height:34px;border-radius:9px;flex-shrink:0;
+  background:linear-gradient(135deg,#1a4fd8,#4f8fff);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'DM Mono',monospace;font-size:11px;font-weight:500;color:#fff;
+  box-shadow:0 0 14px rgba(79,143,255,.3)}
+.brand-title{font-weight:700;font-size:13px;line-height:1.2}
+.brand-sub{font-size:10px;color:var(--muted);font-family:'DM Mono',monospace}
+.divider{width:1px;height:22px;background:var(--b1);flex-shrink:0}
+.chip{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.05em;
+  padding:3px 9px;border-radius:20px;border:1px solid var(--b1);color:var(--muted);background:var(--panel);white-space:nowrap;transition:all .3s}
+.chip.c-blue{border-color:rgba(79,143,255,.4);color:var(--accent)}
+.chip.c-amber{border-color:rgba(246,169,46,.4);color:var(--amber)}
+.chip.c-green{border-color:rgba(31,214,160,.35);color:var(--green)}
+.spacer{flex:1}
+.tbtn{display:flex;align-items:center;gap:5px;padding:5px 12px;border-radius:7px;
+  border:1px solid var(--b2);background:var(--panel);color:var(--sub);
+  font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:500;cursor:pointer;transition:all .18s}
+.tbtn:hover{border-color:var(--accent);color:var(--accent);background:rgba(79,143,255,.07)}
 
-/* Subtle background mesh */
-body::before {
-  content: '';
-  position: fixed; inset: 0; z-index: 0; pointer-events: none;
-  background:
-    radial-gradient(ellipse 60% 40% at 10% 20%, rgba(78,143,255,.07) 0%, transparent 70%),
-    radial-gradient(ellipse 50% 40% at 90% 80%, rgba(0,212,180,.05) 0%, transparent 70%);
-  transition: opacity .3s;
-}
-body.light::before { opacity: .4; }
+/* ── SHEET TABS ── */
+.sheet-tabs{display:flex;gap:0;border-bottom:1px solid var(--b1);background:var(--surface);
+  padding:0 20px;position:sticky;top:55px;z-index:190;overflow-x:auto;transition:background .3s}
+.stab{padding:9px 18px;font-size:12px;font-weight:500;cursor:pointer;
+  border-bottom:2px solid transparent;color:var(--muted);white-space:nowrap;transition:all .18s}
+.stab:hover{color:var(--sub)}
+.stab.on{color:var(--accent);border-bottom-color:var(--accent)}
 
-/* ═══════════════════════════════════════════════════════════
-   HEADER
-═══════════════════════════════════════════════════════════ */
-header {
-  display: flex; align-items: center; gap: 16px;
-  padding: 0 24px; height: 60px;
-  background: var(--surface);
-  border-bottom: 1px solid var(--border);
-  position: sticky; top: 0; z-index: 100;
-  box-shadow: 0 1px 0 var(--border), var(--shadow-sm);
-  transition: background .3s, border-color .3s;
-}
+/* ── LAYOUT ── */
+.layout{display:flex;min-height:calc(100vh - 97px)}
 
-.logo { display: flex; align-items: center; gap: 10px; }
-.logo-mark {
-  width: 36px; height: 36px; border-radius: 10px;
-  background: var(--grad-blue);
-  display: flex; align-items: center; justify-content: center;
-  font-family: var(--mono); font-size: 11px; font-weight: 500;
-  color: #fff; letter-spacing: .05em; flex-shrink: 0;
-  box-shadow: var(--shadow-glow-blue);
-}
-.logo-text { display: flex; flex-direction: column; gap: 1px; }
-.logo-main {
-  font-size: 15px; font-weight: 700; color: var(--text);
-  letter-spacing: -.02em; line-height: 1;
-}
-.logo-sub {
-  font-size: 10px; color: var(--muted);
-  font-family: var(--mono); letter-spacing: .04em;
-}
+/* ── SIDEBAR ── */
+.sidebar{width:244px;min-width:244px;background:var(--surface);border-right:1px solid var(--b1);
+  padding:12px 0 20px;position:sticky;top:97px;height:calc(100vh - 97px);overflow-y:auto;flex-shrink:0;
+  transition:background .3s,border-color .3s}
+.sb-label{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--dim);padding:10px 14px 5px}
 
-/* KPI chips */
-.header-kpis { display: flex; align-items: center; gap: 8px; flex: 1; margin-left: 12px; }
-.kpi-chip {
-  display: flex; align-items: center; gap: 7px;
-  padding: 6px 12px; border-radius: 22px;
-  border: 1px solid var(--border2);
-  background: var(--surface2);
-  font-size: 11px; font-weight: 500; color: var(--text2);
-  white-space: nowrap; transition: background .3s, border-color .3s;
-}
-.kpi-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
-.kpi-val { font-family: var(--mono); font-size: 12px; font-weight: 600; color: var(--text); }
-.kpi-chip.blue   { border-color: rgba(78,143,255,.3);  background: rgba(78,143,255,.1);  color: #79aeff; }
-.kpi-chip.amber  { border-color: rgba(245,166,35,.3);  background: rgba(245,166,35,.1);  color: var(--warn); }
-.kpi-chip.green  { border-color: rgba(0,212,180,.3);   background: rgba(0,212,180,.08);  color: var(--done); }
-body.light .kpi-chip.blue  { background: rgba(78,143,255,.08);  color: #2554e0; }
-body.light .kpi-chip.amber { background: rgba(245,166,35,.08);  color: #b45309; }
-body.light .kpi-chip.green { background: rgba(0,212,180,.08);   color: #059669; }
+.ov-card{margin:10px 10px 12px;padding:14px;border-radius:12px;
+  background:var(--ov-grad);border:1px solid rgba(79,143,255,.18);transition:all .3s}
+.ov-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px}
+.ov-pct{font-family:'DM Mono',monospace;font-size:28px;font-weight:500;color:var(--accent);line-height:1}
+.ov-lbl{font-size:9px;color:var(--muted);font-family:'DM Mono',monospace;letter-spacing:.08em;text-transform:uppercase;margin-bottom:3px}
+.ring-w{position:relative;width:56px;height:56px;flex-shrink:0}
+.ring-w svg{display:block;transform:rotate(-90deg)}
+.ring-c{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  font-family:'DM Mono',monospace;font-size:12px;font-weight:500;line-height:1}
+.ring-c small{font-size:8px;color:var(--muted);margin-top:1px}
+.pbar{height:4px;border-radius:2px;background:var(--b1);overflow:hidden;margin-top:10px;transition:background .3s}
+.pfill{height:100%;border-radius:2px}
 
-.header-actions { display: flex; align-items: center; gap: 8px; }
+.stat-g{display:grid;grid-template-columns:1fr 1fr 1fr;gap:5px;padding:0 10px 12px}
+.stat{padding:9px 6px;border-radius:9px;background:var(--panel);border:1px solid var(--b1);text-align:center;transition:all .3s}
+.stat-n{font-family:'DM Mono',monospace;font-size:18px;font-weight:500}
+.stat-l{font-size:9px;color:var(--dim);font-family:'DM Mono',monospace;letter-spacing:.05em;margin-top:2px}
 
-/* Theme toggle */
-.theme-toggle {
-  width: 40px; height: 24px; border-radius: 12px;
-  background: var(--panel); border: 1px solid var(--border2);
-  cursor: pointer; position: relative; transition: background .3s;
-  flex-shrink: 0;
-}
-.theme-toggle::after {
-  content: '';
-  position: absolute; top: 3px; left: 3px;
-  width: 16px; height: 16px; border-radius: 50%;
-  background: var(--accent);
-  transition: transform .3s, background .3s;
-  box-shadow: 0 0 6px rgba(78,143,255,.5);
-}
-body.light .theme-toggle::after { transform: translateX(16px); background: var(--warn); box-shadow: 0 0 6px rgba(245,166,35,.5); }
+.sb-item{display:flex;align-items:center;gap:8px;
+  margin:2px 8px;padding:7px 10px;border-radius:8px;
+  border:1px solid transparent;cursor:pointer;transition:all .15s}
+.sb-item:hover{background:var(--panel);border-color:var(--b1)}
+.sb-item.hl{background:rgba(79,143,255,.06);border-color:rgba(79,143,255,.22)}
+.sb-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.sb-nm{font-size:11px;font-weight:500;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sb-dt{font-size:9px;color:var(--muted);font-family:'DM Mono',monospace;margin-top:1px;white-space:nowrap}
+.sb-p{font-family:'DM Mono',monospace;font-size:10px;color:var(--sub);flex-shrink:0}
 
-.theme-icon { font-size: 14px; line-height: 1; user-select: none; }
+/* ── MAIN ── */
+.main{flex:1;display:flex;flex-direction:column;min-width:0;overflow:hidden}
+.toolbar{display:flex;align-items:center;gap:8px;padding:8px 16px;
+  border-bottom:1px solid var(--b1);background:var(--surface);
+  position:sticky;top:97px;z-index:50;flex-shrink:0;transition:background .3s}
+.tb-title{font-weight:600;font-size:13px;white-space:nowrap}
+.tabs{display:flex;gap:2px}
+.tab{padding:4px 10px;border-radius:6px;font-size:11px;cursor:pointer;transition:all .15s;
+  color:var(--muted);font-weight:500;border:1px solid transparent}
+.tab:hover{color:var(--sub)}
+.tab.on{background:var(--card);border-color:var(--b2);color:var(--tx)}
+.sp{flex:1}
+.zm-g{display:flex;gap:2px;align-items:center}
+.zm-b{width:24px;height:24px;border-radius:5px;border:1px solid var(--b2);background:var(--panel);
+  color:var(--muted);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:13px;transition:all .15s}
+.zm-b:hover{border-color:var(--accent);color:var(--accent)}
+.zm-l{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);padding:0 5px;letter-spacing:.06em}
+.exp-btn{padding:4px 10px;border-radius:6px;font-size:11px;cursor:pointer;
+  border:1px solid var(--b2);background:var(--panel);color:var(--sub);font-weight:500;transition:all .15s}
+.exp-btn:hover{border-color:var(--accent);color:var(--accent)}
 
-.btn {
-  display: inline-flex; align-items: center; gap: 6px;
-  padding: 8px 18px; border-radius: 10px;
-  border: 1px solid var(--border2);
-  background: var(--panel); color: var(--text);
-  font-family: var(--sans); font-size: 12px; font-weight: 600;
-  cursor: pointer; transition: all .2s; letter-spacing: .01em;
-}
-.btn:hover { border-color: var(--accent); color: var(--accent); background: rgba(78,143,255,.1); }
-.btn.primary {
-  background: var(--grad-blue); border: none; color: #fff;
-  box-shadow: var(--shadow-glow-blue);
-}
-.btn.primary:hover { filter: brightness(1.1); box-shadow: 0 0 28px rgba(78,143,255,.4); }
+/* ── GANTT ── */
+.gantt-scroll{overflow:auto;flex:1}
+.gantt-inner{display:flex}
 
-/* ═══════════════════════════════════════════════════════════
-   LAYOUT
-═══════════════════════════════════════════════════════════ */
-.workspace { display: flex; height: calc(100vh - 60px); }
+.tl{width:300px;min-width:300px;background:var(--surface);border-right:1px solid var(--b1);
+  position:sticky;left:0;z-index:20;flex-shrink:0;transition:background .3s,border-color .3s}
+.tl-hdr{height:68px;display:flex;align-items:flex-end;padding:0 12px 8px;
+  background:var(--surface);border-bottom:1px solid var(--b2);
+  font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--dim);transition:background .3s}
+.tl-hdr span:last-child{margin-left:auto}
 
-/* ═══════════════════════════════════════════════════════════
-   SIDEBAR
-═══════════════════════════════════════════════════════════ */
-aside {
-  width: 232px; min-width: 232px;
-  background: var(--surface);
-  border-right: 1px solid var(--border);
-  display: flex; flex-direction: column;
-  overflow-y: auto; overflow-x: hidden;
-  transition: background .3s, border-color .3s;
-}
-aside::-webkit-scrollbar { width: 3px; }
-aside::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+.tr{display:flex;align-items:center;gap:7px;padding:0 12px;
+  border-bottom:1px solid var(--b1);cursor:pointer;transition:background .15s;height:50px}
+.tr:hover{background:var(--tr-hover)}
+.tr.g-hdr{background:var(--panel);cursor:default;height:38px}
+.tr.sub{background:var(--tr-sub);padding-left:28px}
+.tr.sub:hover{background:var(--tr-sub-h)}
+.tr-no{font-family:'DM Mono',monospace;font-size:9px;color:var(--dim);width:22px;flex-shrink:0;text-align:right}
+.tr-info{flex:1;min-width:0}
+.tr-name{font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tr-date{font-size:9px;color:var(--muted);font-family:'DM Mono',monospace;margin-top:1px}
+.tr-sub-name{font-size:11px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--sub2)}
+.g-lbl{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;font-weight:600;flex:1}
 
-.sidebar-label {
-  font-family: var(--mono); font-size: 9px; letter-spacing: .14em;
-  text-transform: uppercase; color: var(--muted);
-  padding: 16px 16px 6px;
-  display: flex; align-items: center; gap: 8px;
-}
-.sidebar-label::after { content:''; flex:1; height:1px; background: var(--border); }
+.collapser{font-size:10px;color:var(--muted);flex-shrink:0;cursor:pointer;width:14px;
+  transition:transform .2s;display:inline-block;user-select:none}
+.collapser.open{transform:rotate(90deg)}
 
-/* Location cards */
-.project-card {
-  margin: 3px 10px; padding: 10px 12px; border-radius: 12px;
-  border: 1px solid transparent; cursor: pointer;
-  transition: all .22s;
-  display: flex; align-items: center; gap: 11px;
-}
-.project-card:hover { border-color: var(--border2); background: var(--panel); }
-.project-card.active {
-  border-color: rgba(78,143,255,.4);
-  background: rgba(78,143,255,.12);
-  box-shadow: 0 0 0 1px rgba(78,143,255,.15) inset;
-}
-body.light .project-card.active { background: rgba(78,143,255,.07); }
+.badge{font-size:9px;padding:2px 7px;border-radius:20px;
+  font-family:'DM Mono',monospace;letter-spacing:.04em;white-space:nowrap;flex-shrink:0}
+.bd{background:rgba(31,214,160,.1);color:var(--green);border:1px solid rgba(31,214,160,.25)}
+.bp{background:rgba(79,143,255,.1);color:var(--accent);border:1px solid rgba(79,143,255,.25)}
+.bl{background:rgba(244,79,108,.1);color:var(--red);border:1px solid rgba(244,79,108,.25)}
+.bn{background:rgba(79,143,255,.05);color:var(--muted);border:1px solid rgba(79,143,255,.12)}
 
-.pc-icon {
-  width: 34px; height: 34px; border-radius: 10px; flex-shrink: 0;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 15px; background: var(--panel);
-  border: 1px solid var(--border); transition: all .2s;
-}
-.project-card.active .pc-icon { border-color: rgba(78,143,255,.3); background: rgba(78,143,255,.15); }
+.ch{position:relative;flex:1}
+.ch-hdr{height:68px;background:var(--surface);border-bottom:1px solid var(--b2);
+  position:sticky;top:0;z-index:15;display:flex;flex-direction:column;transition:background .3s}
+.m-row{height:26px;display:flex;border-bottom:1px solid var(--b1);overflow:hidden}
+.m-cell{flex-shrink:0;display:flex;align-items:center;padding:0 8px;
+  font-size:10px;font-weight:700;color:var(--tx);border-right:1px solid var(--b1)}
+.w-row{height:42px;display:flex;position:relative;overflow:hidden}
+.w-cell{flex-shrink:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;
+  font-family:'DM Mono',monospace;font-size:9px;color:var(--dim);border-right:1px solid var(--b1)}
+.w-cell.nw{color:var(--accent)}
+.today-flag{position:absolute;bottom:-1px;font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.06em;
+  color:var(--accent);white-space:nowrap;background:var(--surface);padding:1px 5px;border-radius:4px 4px 0 0;
+  border:1px solid rgba(79,143,255,.3);border-bottom:none;transform:translateX(-50%);z-index:2;transition:background .3s}
 
-.pc-text { flex:1; min-width:0; }
-.project-name {
-  font-size: 12.5px; font-weight: 600; color: var(--text);
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: 1.3;
-}
-.project-card.active .project-name { color: #79aeff; }
-body.light .project-card.active .project-name { color: #2554e0; }
-.project-sub { font-size: 10px; color: var(--muted); font-family: var(--mono); margin-top: 1px; }
+.cr{border-bottom:1px solid var(--b1);position:relative;height:50px}
+.cr.g-bg{background:var(--panel);height:38px}
+.cr.sub-bg{height:50px}
 
-/* Stats grid */
-.stat-grid {
-  display: grid; grid-template-columns: repeat(3,1fr);
-  gap: 6px; padding: 4px 12px 10px;
-}
-.stat-box {
-  padding: 12px 4px 10px; border-radius: 12px;
-  background: var(--panel); border: 1px solid var(--border);
-  text-align: center; transition: all .2s;
-}
-.stat-box:hover { border-color: var(--border2); transform: translateY(-1px); }
-.stat-num { font-family: var(--mono); font-size: 24px; font-weight: 700; color: var(--text); line-height: 1; }
-.stat-lbl { font-size: 9px; color: var(--muted); margin-top: 5px; text-transform: uppercase; letter-spacing: .08em; }
+.gl{position:absolute;top:0;bottom:0;width:1px;background:var(--b1);pointer-events:none;z-index:0}
+.gl.ngl{background:rgba(79,143,255,.4);width:2px}
+.t-band{position:absolute;top:0;bottom:0;background:rgba(79,143,255,.04);pointer-events:none;z-index:0}
+.t-line{position:absolute;top:0;bottom:0;width:2px;background:rgba(79,143,255,.5);pointer-events:none;z-index:3}
 
-/* Legend */
-.legend-list { padding: 0 14px 14px; }
-.gl-item {
-  display: flex; align-items: center; gap: 10px;
-  padding: 6px 0; font-size: 11px; font-weight: 500; color: var(--text2);
-  border-bottom: 1px solid var(--border);
-}
-.gl-item:last-child { border-bottom: none; }
-.gl-swatch { width: 30px; height: 8px; border-radius: 4px; flex-shrink: 0; }
+.bar{position:absolute;top:50%;transform:translateY(-50%);
+  height:26px;border-radius:6px;cursor:pointer;overflow:hidden;z-index:2;
+  transition:filter .18s,height .18s}
+.bar:hover{filter:brightness(1.18);height:32px}
+.bar-bg{position:absolute;inset:0;border-radius:6px}
+.bar-shine{position:absolute;top:0;left:0;right:0;height:44%;background:rgba(255,255,255,.1);border-radius:6px 6px 0 0;pointer-events:none}
+.bar-dark{position:absolute;right:0;top:0;bottom:0;background:rgba(0,0,0,.22);pointer-events:none}
+.bar-lbl{position:relative;z-index:1;padding:0 8px;height:100%;display:flex;align-items:center;
+  font-size:10px;font-weight:600;color:rgba(255,255,255,.9);white-space:nowrap;overflow:hidden}
+.sbar{height:20px;border-radius:5px}
 
-/* ═══════════════════════════════════════════════════════════
-   MAIN CONTENT
-═══════════════════════════════════════════════════════════ */
-main { flex: 1; display: flex; flex-direction: column; overflow: hidden; background: var(--bg); transition: background .3s; }
+.cc-blue{background:linear-gradient(90deg,#1741c8,#4f8fff)}
+.cc-teal{background:linear-gradient(90deg,#0b8c7a,#1fd6a0)}
+.cc-amber{background:linear-gradient(90deg,#c47d0a,#f6a92e)}
+.cc-violet{background:linear-gradient(90deg,#6b3db8,#a06af8)}
+.cc-red{background:linear-gradient(90deg,#b41535,#f44f6c)}
+.cc-green{background:linear-gradient(90deg,#0a7a4c,#1fd6a0)}
+.cc-orange{background:linear-gradient(90deg,#b84a08,#f97316)}
+.cc-sky{background:linear-gradient(90deg,#0369a1,#38bdf8)}
+.cc-pink{background:linear-gradient(90deg,#9d174d,#f472b6)}
 
-/* Toolbar */
-.toolbar {
-  padding: 10px 20px;
-  border-bottom: 1px solid var(--border);
-  display: flex; align-items: center; gap: 10px;
-  background: var(--surface); flex-wrap: wrap; flex-shrink: 0;
-  transition: background .3s, border-color .3s;
-}
-.toolbar-title {
-  font-size: 14px; font-weight: 700; color: var(--text); letter-spacing: -.02em; flex: 1;
-}
-.toolbar-title span { font-weight: 400; color: var(--muted); font-size: 11px; margin-left: 6px; }
+@keyframes barIn{from{opacity:0;clip-path:inset(0 100% 0 0 round 6px)}to{opacity:1;clip-path:inset(0 0% 0 0 round 6px)}}
+.bar{animation:barIn .5s cubic-bezier(.22,1,.36,1) both}
 
-.filter-tabs {
-  display: flex; gap: 2px;
-  background: var(--panel); border-radius: 10px; padding: 3px;
-  border: 1px solid var(--border);
-}
-.tab {
-  padding: 5px 13px; border-radius: 8px; font-size: 11px; font-weight: 600;
-  cursor: pointer; transition: all .15s; color: var(--muted); white-space: nowrap;
-}
-.tab:hover { color: var(--text); }
-.tab.active { background: var(--accent); color: #fff; box-shadow: 0 2px 8px rgba(78,143,255,.35); }
+.tt{position:fixed;z-index:999;pointer-events:none;background:var(--card);border:1px solid var(--b2);
+  border-radius:11px;padding:13px;min-width:210px;box-shadow:0 20px 40px rgba(0,0,0,.3);
+  opacity:0;transition:opacity .12s,background .3s;font-size:12px}
+.tt.show{opacity:1}
+.tt-h{font-weight:700;font-size:13px;margin-bottom:9px;line-height:1.3}
+.tt-r{display:flex;justify-content:space-between;gap:14px;margin:3px 0}
+.tt-k{color:var(--dim);font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.08em;text-transform:uppercase}
+.tt-v{font-family:'DM Mono',monospace;font-size:11px;font-weight:500}
+.tt-div{height:1px;background:var(--b1);margin:8px 0}
+.tt-pb{height:3px;border-radius:2px;background:var(--b1);margin-top:5px;overflow:hidden}
+.tt-pf{height:100%;border-radius:2px}
 
-.zoom-ctrl { display: flex; align-items: center; gap: 3px; }
-.zoom-btn {
-  width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;
-  border-radius: 8px; border: 1px solid var(--border2);
-  background: var(--panel); color: var(--muted); cursor: pointer;
-  font-size: 16px; font-weight: 300; transition: all .15s;
-}
-.zoom-btn:hover { color: var(--accent); border-color: rgba(78,143,255,.4); background: rgba(78,143,255,.1); box-shadow: 0 0 8px rgba(78,143,255,.2); }
-.zoom-label-pill {
-  padding: 0 10px; height: 30px; display: flex; align-items: center;
-  border-radius: 8px; border: 1px solid var(--border2);
-  background: var(--panel); color: var(--muted);
-  font-family: var(--mono); font-size: 10px; font-weight: 500;
-}
+.legend{display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+  padding:7px 18px;border-top:1px solid var(--b1);background:var(--surface);font-size:11px;color:var(--muted);
+  transition:background .3s,border-color .3s}
+.li{display:flex;align-items:center;gap:5px}
+.li-sw{width:10px;height:7px;border-radius:2px}
 
-/* ═══════════════════════════════════════════════════════════
-   GANTT WRAP
-═══════════════════════════════════════════════════════════ */
-.gantt-wrap { flex: 1; overflow: auto; position: relative; }
-.gantt-wrap::-webkit-scrollbar { width: 5px; height: 5px; }
-.gantt-wrap::-webkit-scrollbar-track { background: transparent; }
-.gantt-wrap::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 4px; }
-
-.gantt-container {
-  display: grid;
-  grid-template-columns: 300px 1fr;
-  min-height: 100%;
-}
-
-/* Task list — sticky left panel */
-.task-list {
-  background: var(--surface);
-  border-right: 1px solid var(--border);
-  position: sticky; left: 0; z-index: 10;
-  transition: background .3s, border-color .3s;
-  box-shadow: 4px 0 16px rgba(0,0,0,.2);
-}
-body.light .task-list { box-shadow: 4px 0 12px rgba(0,0,0,.06); }
-
-.task-list-header {
-  height: 58px; display: flex; align-items: flex-end; padding: 0 14px 9px;
-  border-bottom: 1px solid var(--border);
-  font-family: var(--mono); font-size: 9px; letter-spacing: .12em;
-  text-transform: uppercase; color: var(--muted); gap: 8px;
-  position: sticky; top: 0; background: var(--surface); z-index: 5;
-  transition: background .3s;
-}
-
-/* Task rows */
-.task-row {
-  height: var(--row-h); display: flex; align-items: center;
-  padding: 0 14px; gap: 9px;
-  border-bottom: 1px solid var(--border);
-  transition: background .12s; cursor: pointer;
-}
-.task-row:hover { background: var(--surface2); }
-
-.task-row.group-row {
-  height: 36px; background: var(--bg2);
-  border-bottom: 1px solid var(--border2);
-}
-.task-row.group-row:hover { background: var(--panel); }
-
-.task-row.sub-row {
-  height: 40px; padding-left: 30px;
-  background: rgba(255,255,255,.02);
-}
-body.light .task-row.sub-row { background: rgba(0,0,0,.015); }
-.task-row.sub-row:hover { background: var(--surface2); }
-
-/* Collapse button */
-.collapse-btn {
-  width: 20px; height: 20px; flex-shrink: 0;
-  display: flex; align-items: center; justify-content: center;
-  border-radius: 6px; color: var(--muted); font-size: 9px;
-  cursor: pointer; transition: all .2s;
-  background: var(--panel); border: 1px solid var(--border);
-}
-.collapse-btn:hover { background: rgba(78,143,255,.15); color: var(--accent); border-color: rgba(78,143,255,.3); }
-.collapse-btn.collapsed { transform: rotate(-90deg); }
-
-.task-info { flex: 1; min-width: 0; }
-.task-name {
-  font-size: 12px; font-weight: 600; color: var(--text);
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: 1.3;
-}
-.task-row.sub-row .task-name { font-size: 11px; font-weight: 500; color: var(--text2); }
-.task-meta {
-  font-size: 9.5px; color: var(--muted); font-family: var(--mono); margin-top: 2px; line-height: 1;
-}
-
-/* Status pills */
-.status-pill {
-  font-size: 9px; font-weight: 700; padding: 3px 9px; border-radius: 20px;
-  font-family: var(--mono); white-space: nowrap; flex-shrink: 0;
-  letter-spacing: .03em; text-transform: uppercase;
-}
-.s-todo    { background: rgba(255,255,255,.07); color: var(--muted);    border: 1px solid var(--border2); }
-.s-inprog  { background: rgba(78,143,255,.15);  color: #79aeff;         border: 1px solid rgba(78,143,255,.3); }
-.s-review  { background: rgba(245,166,35,.12);  color: var(--warn);     border: 1px solid rgba(245,166,35,.3); }
-.s-done    { background: rgba(0,212,180,.12);   color: var(--done);     border: 1px solid rgba(0,212,180,.3); }
-.s-block   { background: rgba(255,77,106,.12);  color: var(--danger);   border: 1px solid rgba(255,77,106,.3); }
-
-body.light .s-todo    { background: #f0f2f8; color: #8a9bbb; border-color: #dde3f0; }
-body.light .s-inprog  { background: rgba(78,143,255,.09);  color: #2554e0; border-color: rgba(78,143,255,.2); }
-body.light .s-review  { background: rgba(245,166,35,.09);  color: #b45309; border-color: rgba(245,166,35,.2); }
-body.light .s-done    { background: rgba(0,212,180,.09);   color: #059669; border-color: rgba(0,212,180,.2); }
-body.light .s-block   { background: rgba(255,77,106,.09);  color: #be123c; border-color: rgba(255,77,106,.2); }
-
-.group-label {
-  font-family: var(--mono); font-size: 9px; letter-spacing: .14em;
-  text-transform: uppercase; font-weight: 700; flex: 1;
-}
-.group-count {
-  font-family: var(--mono); font-size: 9px; font-weight: 600;
-  color: var(--muted); background: var(--panel);
-  border: 1px solid var(--border); padding: 2px 8px; border-radius: 10px;
-}
-
-/* ═══════════════════════════════════════════════════════════
-   GANTT CHART
-═══════════════════════════════════════════════════════════ */
-.gantt-chart { position: relative; background: var(--bg); transition: background .3s; }
-
-.gantt-header {
-  height: 58px; position: sticky; top: 0; z-index: 5;
-  background: var(--surface); border-bottom: 1px solid var(--border);
-  display: flex; flex-direction: column;
-  transition: background .3s;
-}
-.month-row {
-  height: 24px; display: flex; border-bottom: 1px solid var(--border);
-  background: var(--bg2);
-}
-.month-cell {
-  display: flex; align-items: center; padding: 0 12px;
-  font-size: 11px; font-weight: 700; color: var(--text);
-  border-right: 1px solid var(--border);
-  letter-spacing: .01em; white-space: nowrap;
-}
-.week-row { height: 34px; display: flex; }
-.week-cell {
-  display: flex; align-items: center; justify-content: center;
-  font-family: var(--mono); font-size: 9px; color: var(--muted);
-  border-right: 1px solid var(--border); position: relative; white-space: nowrap;
-}
-.week-cell.today-col {
-  color: var(--accent); font-weight: 600;
-  background: rgba(78,143,255,.07);
-}
-.week-cell.today-col::after {
-  content: ''; position: absolute; bottom: 0; left: 50%;
-  width: 5px; height: 5px; border-radius: 50%;
-  background: var(--accent); transform: translateX(-50%);
-  box-shadow: 0 0 6px var(--accent);
-}
-
-.gantt-body { position: relative; }
-
-/* Grid rows */
-.gantt-row {
-  display: flex; align-items: center;
-  border-bottom: 1px solid var(--border); position: relative;
-  transition: background .1s;
-}
-.gantt-row:hover { background: rgba(78,143,255,.04); }
-.gantt-row.group-bg { background: var(--bg2); height: 36px; }
-.gantt-row.group-bg:hover { background: var(--panel); }
-.gantt-row.task-height { height: var(--row-h); }
-.gantt-row.sub-height  { height: 40px; }
-
-/* Subtle alternating row stripe */
-.gantt-row.task-height:nth-child(even) { background: rgba(255,255,255,.015); }
-body.light .gantt-row.task-height:nth-child(even) { background: rgba(0,0,0,.02); }
-
-/* Today marker */
-.today-marker {
-  position: absolute; top: 0; bottom: 0; width: 1.5px;
-  background: var(--accent); pointer-events: none; z-index: 4;
-  box-shadow: 0 0 8px rgba(78,143,255,.6);
-}
-.today-marker::before {
-  content: 'TODAY';
-  position: absolute; top: 5px; left: 50%; transform: translateX(-50%);
-  font-family: var(--mono); font-size: 8px; letter-spacing: .1em;
-  color: #fff; white-space: nowrap;
-  background: var(--accent); padding: 2px 6px; border-radius: 5px;
-  box-shadow: 0 2px 8px rgba(78,143,255,.5);
-}
-
-/* ═══════════════════════════════════════════════════════════
-   GANTT BARS — Paycent-style gradient bars with glow
-═══════════════════════════════════════════════════════════ */
-.bar-wrap {
-  position: absolute; top: 50%; transform: translateY(-50%);
-  height: var(--bar-h); border-radius: 7px; overflow: hidden;
-  cursor: pointer; z-index: 3;
-  transition: filter .18s, transform .18s, box-shadow .18s;
-  animation: barIn .32s cubic-bezier(.34,1.4,.64,1) both;
-}
-.bar-wrap:hover {
-  filter: brightness(1.12) saturate(1.1);
-  transform: translateY(-50%) scaleY(1.07);
-  box-shadow: 0 6px 20px rgba(0,0,0,.3), 0 0 16px rgba(78,143,255,.2);
-}
-.bar-wrap.sub-bar {
-  height: 18px; border-radius: 5px;
-  opacity: .88;
-}
-.bar-wrap.sub-bar:hover { opacity: 1; }
-
-.bar-inner {
-  height: 100%; width: 100%; position: relative; overflow: hidden;
-  display: flex; align-items: center; padding: 0 9px;
-  font-size: 10px; font-weight: 600; color: rgba(255,255,255,.95);
-  white-space: nowrap; font-family: var(--sans);
-  letter-spacing: -.01em;
-}
-/* Top shine */
-.bar-inner::after {
-  content: ''; position: absolute; top: 0; left: 0; right: 0;
-  height: 45%; background: rgba(255,255,255,.14);
-  pointer-events: none; border-radius: 7px 7px 0 0;
-}
-/* Progress fill overlay */
-.bar-progress {
-  position: absolute; top: 0; left: 0; bottom: 0;
-  background: rgba(255,255,255,.2); transform-origin: left; border-radius: 7px;
-}
-.bar-text { position: relative; z-index: 1; text-shadow: 0 1px 3px rgba(0,0,0,.3); }
-
-/* Bar gradient colors */
-.b-bts      { background: linear-gradient(90deg,#1a56db 0%,#4e8fff 60%,#70a8ff 100%); box-shadow: 0 3px 12px rgba(78,143,255,.3); }
-.b-bts-sub  { background: linear-gradient(90deg,#1144bb 0%,#3670e8 100%); }
-.b-ari      { background: linear-gradient(90deg,#7c3aed 0%,#a78bfa 100%); box-shadow: 0 3px 12px rgba(167,139,250,.25); }
-.b-ari-sub  { background: linear-gradient(90deg,#6628d0 0%,#9061f0 100%); }
-.b-ksl      { background: linear-gradient(90deg,#c05621 0%,#f5a623 100%); box-shadow: 0 3px 12px rgba(245,166,35,.25); }
-.b-ksl-sub  { background: linear-gradient(90deg,#a84a1a 0%,#e08920 100%); }
-.b-design   { background: linear-gradient(90deg,#0891b2 0%,#00d4b4 100%); box-shadow: 0 3px 12px rgba(0,212,180,.25); }
-.b-move     { background: linear-gradient(90deg,#047857 0%,#10b981 100%); box-shadow: 0 3px 12px rgba(16,185,129,.2); }
-.b-reinstate{ background: linear-gradient(90deg,#9f1239 0%,#f43f5e 100%); box-shadow: 0 3px 12px rgba(244,63,94,.25); }
-
-@keyframes barIn {
-  from { opacity: 0; transform: translateY(-50%) scaleX(.85); }
-  to   { opacity: 1; transform: translateY(-50%) scaleX(1); }
-}
-
-/* ═══════════════════════════════════════════════════════════
-   TOOLTIP
-═══════════════════════════════════════════════════════════ */
-.tooltip {
-  position: fixed; z-index: 999; pointer-events: none;
-  background: var(--surface2); border: 1px solid var(--border2);
-  border-radius: 14px; padding: 14px 16px; min-width: 230px;
-  box-shadow: var(--shadow-card), 0 0 0 1px rgba(78,143,255,.1) inset;
-  opacity: 0; transform: translateY(6px) scale(.97);
-  transition: opacity .15s, transform .15s;
-  backdrop-filter: blur(12px);
-}
-.tooltip.show { opacity: 1; transform: translateY(0) scale(1); }
-.tt-title {
-  font-weight: 700; font-size: 13px; margin-bottom: 10px; line-height: 1.3;
-  color: var(--text); padding-bottom: 9px; border-bottom: 1px solid var(--border);
-}
-.tt-row { display: flex; justify-content: space-between; align-items: center; gap: 14px; margin: 5px 0; }
-.tt-key { color: var(--muted); font-family: var(--mono); font-size: 9px; text-transform: uppercase; letter-spacing: .08em; }
-.tt-val { font-family: var(--mono); font-size: 11px; color: var(--text); font-weight: 500; }
-
-/* ═══════════════════════════════════════════════════════════
-   LEGEND FOOTER
-═══════════════════════════════════════════════════════════ */
-.legend {
-  padding: 9px 20px; border-top: 1px solid var(--border);
-  display: flex; align-items: center; gap: 16px;
-  background: var(--surface); font-size: 10.5px; color: var(--text2);
-  font-weight: 500; flex-wrap: wrap; flex-shrink: 0;
-  transition: background .3s, border-color .3s;
-}
-.legend-section { font-family: var(--mono); font-size: 9px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
-.legend-item { display: flex; align-items: center; gap: 6px; }
-.legend-bar  { width: 22px; height: 8px; border-radius: 4px; }
-
-/* ═══════════════════════════════════════════════════════════
-   MODAL
-═══════════════════════════════════════════════════════════ */
-.modal-overlay {
-  position: fixed; inset: 0; background: rgba(0,0,0,.7);
-  display: flex; align-items: center; justify-content: center;
-  z-index: 200; opacity: 0; pointer-events: none; transition: opacity .22s;
-  backdrop-filter: blur(8px);
-}
-.modal-overlay.show { opacity: 1; pointer-events: all; }
-.modal {
-  background: var(--surface2); border: 1px solid var(--border2);
-  border-radius: 20px; padding: 28px; width: 490px; max-width: 93vw;
-  transform: scale(.95) translateY(10px); transition: transform .24s;
-  box-shadow: var(--shadow-card);
-}
-.modal-overlay.show .modal { transform: scale(1) translateY(0); }
-.modal-title { font-size: 17px; font-weight: 800; margin-bottom: 22px; letter-spacing: -.02em; }
-.modal-field { margin-bottom: 14px; }
-.modal-label { font-size: 10px; color: var(--muted); font-family: var(--mono); margin-bottom: 5px; text-transform: uppercase; letter-spacing: .08em; display: block; }
-.modal-input {
-  width: 100%; padding: 10px 14px; border-radius: 10px;
-  border: 1px solid var(--border2); background: var(--panel);
-  color: var(--text); font-family: var(--sans); font-size: 13px; outline: none;
-  transition: border-color .15s, box-shadow .15s;
-}
-.modal-input:focus { border-color: rgba(78,143,255,.5); box-shadow: 0 0 0 3px rgba(78,143,255,.12); }
-.modal-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 24px; }
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:var(--scroll-t)}
+::-webkit-scrollbar-thumb{background:var(--scroll-b);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:var(--scroll-h)}
 </style>
 </head>
 <body>
 
-<!-- Header -->
-<header>
-  <div class="logo">
-    <div class="logo-mark">NTL</div>
-    <div class="logo-text">
-      <div class="logo-main">NTL Office Project</div>
-      <div class="logo-sub">OWNER: NTL JAN &nbsp;·&nbsp; D&amp;B CONTRACT &nbsp;·&nbsp; 27-JAN-26</div>
+<!-- TOP BAR -->
+<div class="topbar">
+  <div style="display:flex;align-items:center;gap:10px">
+    <div class="logo">NTL</div>
+    <div>
+      <div class="brand-title">NTL Office</div>
+      <div class="brand-sub">Key Milestones · 30 Apr 2026</div>
     </div>
   </div>
-  <div class="header-kpis">
-    <div class="kpi-chip">
-      <div class="kpi-dot" style="background:#3b6ef5"></div>
-      <span>Tasks</span>
-      <span class="kpi-val" id="h-total">15</span>
-    </div>
-    <div class="kpi-chip amber">
-      <div class="kpi-dot" style="background:var(--warn)"></div>
-      <span>Overall Progress</span>
-      <span class="kpi-val">0%</span>
-    </div>
-    <div class="kpi-chip green">
-      <div class="kpi-dot" style="background:var(--done)"></div>
-      <span>Done</span>
-      <span class="kpi-val" id="h-done">0</span>
-    </div>
-    <div class="kpi-chip blue">
-      <span>Feb – Dec 2026</span>
-    </div>
-  </div>
-  <div class="header-actions">
-    <span class="theme-icon" id="themeIcon">🌙</span>
-    <div class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Toggle light/dark mode"></div>
-    <span class="theme-icon" id="themeIconDay">☀️</span>
-    <button class="btn primary" onclick="openModal()">＋ Add Task</button>
-  </div>
-</header>
+  <div class="divider"></div>
+  <div class="chip">D&amp;B Contract</div>
+  <div class="chip c-blue" id="topChipLive">● LIVE · 05 May 2026</div>
+  <div class="chip c-amber" id="topChipPct">Overall —</div>
+  <div class="spacer"></div>
+  <button class="tbtn exp-btn" id="expandBtn" onclick="toggleExpand()">▶ Expand All</button>
+  <span class="theme-icon" id="themeIcon" onclick="toggleTheme()" title="Switch theme">🌙</span>
+  <div class="theme-toggle" onclick="toggleTheme()" title="Switch theme"></div>
+  <button class="tbtn">↓ Export</button>
+</div>
 
-<div class="workspace">
-  <!-- Sidebar -->
-  <aside>
-    <div class="sidebar-label">Locations</div>
+<!-- SHEET TABS -->
+<div class="sheet-tabs">
+  <div class="stab on" id="stab0" onclick="switchSheet(0)">📋 Pre-Construction (BTS)</div>
+  <div class="stab" id="stab1" onclick="switchSheet(1)">🏗 Critical Path — Full Plan</div>
+</div>
 
-    <div class="project-card active" onclick="selectProject(this,'all')">
-      <div class="pc-icon">🗂</div>
-      <div class="pc-text">
-        <div class="project-name">All Locations</div>
-        <div class="project-sub">3 locations · 15 tasks</div>
-      </div>
-    </div>
-    <div class="project-card" onclick="selectProject(this,'bts')">
-      <div class="pc-icon">🔵</div>
-      <div class="pc-text">
-        <div class="project-name">BTS (New Office)</div>
-        <div class="project-sub">Feb – Oct 2026</div>
-      </div>
-    </div>
-    <div class="project-card" onclick="selectProject(this,'arihills')">
-      <div class="pc-icon">🟣</div>
-      <div class="pc-text">
-        <div class="project-name">Ari Hills</div>
-        <div class="project-sub">Sep – Dec 2026</div>
-      </div>
-    </div>
-    <div class="project-card" onclick="selectProject(this,'ksl')">
-      <div class="pc-icon">🟡</div>
-      <div class="pc-text">
-        <div class="project-name">KSL</div>
-        <div class="project-sub">Sep – Nov 2026</div>
-      </div>
-    </div>
+<div class="layout">
 
-    <div class="sidebar-label">Stats</div>
-    <div class="stat-grid">
-      <div class="stat-box">
-        <div class="stat-num" id="s-total">15</div>
-        <div class="stat-lbl">Tasks</div>
-      </div>
-      <div class="stat-box">
-        <div class="stat-num" id="s-done" style="color:var(--done)">0</div>
-        <div class="stat-lbl">Done</div>
-      </div>
-      <div class="stat-box">
-        <div class="stat-num" id="s-late" style="color:var(--danger)">0</div>
-        <div class="stat-lbl">Late</div>
-      </div>
-    </div>
-
-    <div class="sidebar-label">Legend</div>
-    <div class="legend-list">
-      <div class="gl-item"><div class="gl-swatch b-bts"></div>BTS Construction</div>
-      <div class="gl-item"><div class="gl-swatch b-design"></div>Design / IT</div>
-      <div class="gl-item"><div class="gl-swatch b-move"></div>Move-in / Move-out</div>
-      <div class="gl-item"><div class="gl-swatch b-ari"></div>Ari Hills</div>
-      <div class="gl-item"><div class="gl-swatch b-ksl"></div>KSL</div>
-      <div class="gl-item"><div class="gl-swatch b-reinstate"></div>Reinstate</div>
-    </div>
-  </aside>
-
-  <!-- Main -->
-  <main>
-    <div class="toolbar">
-      <div class="toolbar-title">Key Milestones 2026 <span>NTL Office Relocation</span></div>
-      <div class="filter-tabs">
-        <div class="tab active" onclick="filterTasks('all',this)">All</div>
-        <div class="tab" onclick="filterTasks('s-inprog',this)">In Progress</div>
-        <div class="tab" onclick="filterTasks('s-block',this)">Blocked</div>
-        <div class="tab" onclick="filterTasks('s-done',this)">Done</div>
-      </div>
-      <div class="zoom-ctrl">
-        <div class="zoom-btn" onclick="zoomOut()">−</div>
-        <div class="zoom-label-pill" id="zoom-label">W</div>
-        <div class="zoom-btn" onclick="zoomIn()">＋</div>
-      </div>
-    </div>
-
-    <div class="gantt-wrap" id="ganttWrap">
-      <div class="gantt-container" id="ganttContainer">
-        <div class="task-list" id="taskList">
-          <div class="task-list-header">
-            <span>Task / Milestone</span>
-            <span style="margin-left:auto">Status</span>
-          </div>
-          <div id="taskRows"></div>
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="ov-card">
+      <div class="ov-top">
+        <div>
+          <div class="ov-lbl">Overall Progress</div>
+          <div class="ov-pct" id="sbPct">—</div>
+          <div style="font-size:10px;color:#8a9db8;margin-top:4px" id="sbDesc">NTL Office</div>
         </div>
-        <div class="gantt-chart" id="ganttChart">
-          <div class="gantt-header" id="ganttHeader"></div>
-          <div class="gantt-body" id="ganttBody"></div>
-          <svg class="dep-svg" id="depSvg" style="position:absolute;top:0;left:0;pointer-events:none;z-index:2"></svg>
+        <div class="ring-w">
+          <svg width="56" height="56" viewBox="0 0 56 56">
+            <circle cx="28" cy="28" r="22" fill="none" stroke="#1c2535" stroke-width="5"/>
+            <circle cx="28" cy="28" r="22" fill="none" stroke="#4f8fff" stroke-width="5"
+              stroke-dasharray="138.2" id="ringArc" stroke-dashoffset="138.2" stroke-linecap="round"/>
+          </svg>
+          <div class="ring-c"><span id="ringPct">0%</span><small>done</small></div>
+        </div>
+      </div>
+      <div class="pbar"><div class="pfill" id="pfillBar" style="width:0%;background:linear-gradient(90deg,#1a4fd8,#4f8fff)"></div></div>
+    </div>
+
+    <div class="stat-g">
+      <div class="stat"><div class="stat-n" id="stTotal">0</div><div class="stat-l">TASKS</div></div>
+      <div class="stat"><div class="stat-n" style="color:#1fd6a0" id="stDone">0</div><div class="stat-l">DONE</div></div>
+      <div class="stat"><div class="stat-n" style="color:#f44f6c" id="stLate">0</div><div class="stat-l">LATE</div></div>
+    </div>
+
+    <div class="sb-label">Summary</div>
+    <div id="sbList"></div>
+
+    <div class="sb-label" style="margin-top:10px">Project Info</div>
+    <div style="padding:0 14px;display:flex;flex-direction:column;gap:7px">
+      <div style="display:flex;justify-content:space-between">
+        <span style="color:#2e3e55;font-family:'DM Mono',monospace;font-size:9px;text-transform:uppercase;letter-spacing:.08em">Start</span>
+        <span id="infoStart" style="font-family:'DM Mono',monospace;font-size:10px"></span>
+      </div>
+      <div style="display:flex;justify-content:space-between">
+        <span style="color:#2e3e55;font-family:'DM Mono',monospace;font-size:9px;text-transform:uppercase;letter-spacing:.08em">Finish</span>
+        <span id="infoEnd" style="font-family:'DM Mono',monospace;font-size:10px"></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main">
+    <div class="toolbar">
+      <div class="tb-title" id="tbTitle">—</div>
+      <div style="width:8px"></div>
+      <div class="tabs">
+        <div class="tab on" onclick="applyFilter(this,'all')">All</div>
+        <div class="tab" onclick="applyFilter(this,'prog')">Active</div>
+        <div class="tab" onclick="applyFilter(this,'done')">Done</div>
+        <div class="tab" onclick="applyFilter(this,'late')">Late</div>
+      </div>
+      <div class="sp"></div>
+      <div class="zm-g">
+        <div class="zm-b" onclick="setZoom(-1)">−</div>
+        <div class="zm-l" id="zmLbl">WK</div>
+        <div class="zm-b" onclick="setZoom(1)">＋</div>
+      </div>
+    </div>
+
+    <div class="gantt-scroll" id="gw">
+      <div class="gantt-inner" id="gi">
+        <div class="tl" id="tlPanel">
+          <div class="tl-hdr"><span style="flex:1">Task</span><span>Status</span></div>
+          <div id="tlRows"></div>
+        </div>
+        <div class="ch" id="chPanel">
+          <div class="ch-hdr" id="chHdr"></div>
+          <div id="chBody"></div>
         </div>
       </div>
     </div>
 
     <div class="legend">
-      <span class="legend-section">Legend</span>
-      <div class="legend-item"><div class="legend-bar b-bts"></div>BTS Construction</div>
-      <div class="legend-item"><div class="legend-bar b-design"></div>Design / IT</div>
-      <div class="legend-item"><div class="legend-bar b-move"></div>Move-in / Move-out</div>
-      <div class="legend-item"><div class="legend-bar b-ari"></div>Ari Hills</div>
-      <div class="legend-item"><div class="legend-bar b-ksl"></div>KSL</div>
-      <div class="legend-item"><div class="legend-bar b-reinstate"></div>Reinstate</div>
-      <span style="margin-left:auto;font-family:var(--mono);font-size:9px;color:var(--muted)">= TODAY &nbsp; = PLAN</span>
-    </div>
-  </main>
-</div>
-
-<!-- Tooltip -->
-<div class="tooltip" id="tooltip">
-  <div class="tt-title" id="tt-title"></div>
-  <div class="tt-row"><span class="tt-key">Group</span><span class="tt-val" id="tt-group"></span></div>
-  <div class="tt-row"><span class="tt-key">Start</span><span class="tt-val" id="tt-start"></span></div>
-  <div class="tt-row"><span class="tt-key">Finish</span><span class="tt-val" id="tt-end"></span></div>
-  <div class="tt-row"><span class="tt-key">Duration</span><span class="tt-val" id="tt-days"></span></div>
-  <div class="tt-row"><span class="tt-key">Status</span><span class="tt-val" id="tt-status"></span></div>
-  <div class="tt-row"><span class="tt-key">Progress</span><span class="tt-val" id="tt-pct"></span></div>
-</div>
-
-<!-- Add Task Modal -->
-<div class="modal-overlay" id="modalOverlay" onclick="closeModalOutside(event)">
-  <div class="modal">
-    <div class="modal-title">＋ Add New Task</div>
-    <div class="modal-field">
-      <div class="modal-label">Task Name</div>
-      <input class="modal-input" id="m-name" placeholder="e.g. Floor 30 Construction" />
-    </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-      <div class="modal-field">
-        <div class="modal-label">Start Date</div>
-        <input class="modal-input" id="m-start" type="date" />
-      </div>
-      <div class="modal-field">
-        <div class="modal-label">End Date</div>
-        <input class="modal-input" id="m-end" type="date" />
-      </div>
-    </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-      <div class="modal-field">
-        <div class="modal-label">Group</div>
-        <select class="modal-input" id="m-group">
-          <option value="g1">BTS</option>
-          <option value="g2">Ari Hills</option>
-          <option value="g3">KSL</option>
-        </select>
-      </div>
-      <div class="modal-field">
-        <div class="modal-label">Category</div>
-        <select class="modal-input" id="m-cat">
-          <option value="b-bts">BTS Construction</option>
-          <option value="b-design">Design / IT</option>
-          <option value="b-move">Move-in / Move-out</option>
-          <option value="b-ari">Ari Hills</option>
-          <option value="b-ksl">KSL</option>
-          <option value="b-reinstate">Reinstate</option>
-        </select>
-      </div>
-    </div>
-    <div class="modal-field">
-      <div class="modal-label">Status</div>
-      <select class="modal-input" id="m-status">
-        <option value="s-todo">To Do</option>
-        <option value="s-inprog">In Progress</option>
-        <option value="s-review">In Review</option>
-        <option value="s-done">Done</option>
-        <option value="s-block">Blocked</option>
-      </select>
-    </div>
-    <div class="modal-actions">
-      <button class="btn" onclick="closeModal()">Cancel</button>
-      <button class="btn primary" onclick="addTask()">Add Task</button>
+      <span style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#2e3e55">Legend</span>
+      <div class="li"><div class="li-sw cc-blue"></div>Design/Approval</div>
+      <div class="li"><div class="li-sw cc-violet"></div>BTS Interior</div>
+      <div class="li"><div class="li-sw cc-teal"></div>Construction</div>
+      <div class="li"><div class="li-sw cc-amber"></div>Procurement</div>
+      <div class="li"><div class="li-sw cc-orange"></div>Move / Logistics</div>
+      <div class="li"><div class="li-sw cc-sky"></div>IT / Appliances</div>
+      <div class="li"><div class="li-sw cc-green"></div>Complete</div>
+      <div class="li"><div class="li-sw cc-red"></div>Overdue</div>
     </div>
   </div>
 </div>
 
+<!-- TOOLTIP -->
+<div class="tt" id="tt">
+  <div class="tt-h" id="ttH"></div>
+  <div class="tt-div"></div>
+  <div class="tt-r"><span class="tt-k">Start</span><span class="tt-v" id="ttS"></span></div>
+  <div class="tt-r"><span class="tt-k">Finish</span><span class="tt-v" id="ttF"></span></div>
+  <div class="tt-r"><span class="tt-k">Days</span><span class="tt-v" id="ttD"></span></div>
+  <div class="tt-r"><span class="tt-k">Status</span><span class="tt-v" id="ttSt"></span></div>
+  <div class="tt-div"></div>
+  <div class="tt-r"><span class="tt-k">Progress</span><span class="tt-v" id="ttP"></span></div>
+  <div class="tt-pb"><div class="tt-pf" id="ttPf"></div></div>
+</div>
+
 <script>
-// ─────────────────────────────────────────────────────────────
-// DATA — NTL Office Key Milestones 2026
-// ─────────────────────────────────────────────────────────────
-const GROUPS = [
-  { id:'g1', name:'BTS — New Office',   color:'#4e8fff' },
-  { id:'g2', name:'Ari Hills',           color:'#a78bfa' },
-  { id:'g3', name:'KSL',                 color:'#f5a623' },
-];
+// ═══════════════════════════════════════════════════
+// DATA
+// ═══════════════════════════════════════════════════
+var TODAY = new Date(2026, 4, 5); // May 5 2026
 
-// Main tasks (summary bars)
-const MAIN_TASKS = [
-  // ── BTS ──
-  {id:'t1', group:'g1', name:'Furniture (New BTS)',            start:'2026-02-04',end:'2026-09-30',days:238,pct:0,status:'s-todo',cat:'b-bts',     parent:null},
-  {id:'t2', group:'g1', name:'Mover',                          start:'2026-02-20',end:'2026-08-30',days:191,pct:0,status:'s-todo',cat:'b-bts',     parent:null},
-  {id:'t3', group:'g1', name:'IT Part',                        start:'2026-02-15',end:'2026-09-15',days:212,pct:0,status:'s-todo',cat:'b-design',  parent:null},
-  {id:'t4', group:'g1', name:'Office Appliances',              start:'2026-03-01',end:'2026-09-30',days:213,pct:0,status:'s-todo',cat:'b-bts',     parent:null},
-  {id:'t5', group:'g1', name:'Design Develop',                 start:'2026-02-01',end:'2026-05-31',days:119,pct:0,status:'s-todo',cat:'b-design',  parent:null},
-  {id:'t6', group:'g1', name:'Interior Construction Phase 1',  start:'2026-03-01',end:'2026-10-27',days:240,pct:0,status:'s-todo',cat:'b-bts',     parent:null},
-  {id:'t7', group:'g1', name:'Move-in Ari Hills→BTS Phase 1',  start:'2026-09-11',end:'2026-10-26',days:45, pct:0,status:'s-todo',cat:'b-move',    parent:null},
-  {id:'t8', group:'g1', name:'Interior Construction Phase 2',  start:'2026-05-01',end:'2026-10-22',days:174,pct:0,status:'s-todo',cat:'b-bts',     parent:null},
-  {id:'t9', group:'g1', name:'Move-in Ari Hills→BTS Phase 2',  start:'2026-10-09',end:'2026-10-19',days:10, pct:0,status:'s-todo',cat:'b-move',    parent:null},
-  // ── Ari Hills ──
-  {id:'t10',group:'g2', name:'Renovation (Ari Hills)',          start:'2026-09-14',end:'2026-11-25',days:72, pct:0,status:'s-todo',cat:'b-ari',     parent:null},
-  {id:'t11',group:'g2', name:'Move-in KSL→Ari Hills',           start:'2026-09-11',end:'2026-10-05',days:24, pct:0,status:'s-todo',cat:'b-move',    parent:null},
-  {id:'t12',group:'g2', name:'Move-Out Ari Hills→BTS',          start:'2026-09-11',end:'2026-11-02',days:52, pct:0,status:'s-todo',cat:'b-move',    parent:null},
-  {id:'t13',group:'g2', name:'Reinstate Ari Hills',             start:'2026-11-05',end:'2026-12-05',days:30, pct:0,status:'s-todo',cat:'b-reinstate',parent:null},
-  // ── KSL ──
-  {id:'t14',group:'g3', name:'Move-Out KSL→Ari Hills',          start:'2026-09-11',end:'2026-10-05',days:24, pct:0,status:'s-todo',cat:'b-ksl',     parent:null},
-  {id:'t15',group:'g3', name:'Reinstate KSL',                   start:'2026-09-17',end:'2026-11-07',days:51, pct:0,status:'s-todo',cat:'b-reinstate',parent:null},
-];
-
-// Sub-tasks
-const SUB_TASKS = [
-  // 1. Furniture
-  {id:'s1_1',group:'g1',name:'1.1 Specification',          start:'2026-02-04',end:'2026-03-15',days:39,pct:0,status:'s-todo',cat:'b-bts-sub',parent:'t1'},
-  {id:'s1_2',group:'g1',name:'1.2 Selection Process',      start:'2026-02-04',end:'2026-03-15',days:39,pct:0,status:'s-todo',cat:'b-bts-sub',parent:'t1'},
-  {id:'s1_3',group:'g1',name:'1.3 Negotiate Process',      start:'2026-03-15',end:'2026-03-31',days:16,pct:0,status:'s-todo',cat:'b-bts-sub',parent:'t1'},
-  {id:'s1_4',group:'g1',name:'1.4 Confirm Purchase (PO)',  start:'2026-03-31',end:'2026-04-30',days:30,pct:0,status:'s-todo',cat:'b-bts-sub',parent:'t1'},
-  {id:'s1_5',group:'g1',name:'1.5 Production Time',        start:'2026-05-01',end:'2026-07-31',days:91,pct:0,status:'s-todo',cat:'b-bts-sub',parent:'t1'},
-  {id:'s1_6',group:'g1',name:'1.6 Material Onsite',        start:'2026-08-01',end:'2026-08-31',days:30,pct:0,status:'s-todo',cat:'b-bts-sub',parent:'t1'},
-  {id:'s1_7',group:'g1',name:'1.7 Installation',           start:'2026-08-07',end:'2026-09-30',days:54,pct:0,status:'s-todo',cat:'b-bts-sub',parent:'t1'},
-  // 2. Mover
-  {id:'s2_1',group:'g1',name:'2.1 Site Survey',            start:'2026-02-20',end:'2026-03-15',days:23,pct:0,status:'s-todo',cat:'b-bts-sub',parent:'t2'},
-  {id:'s2_2',group:'g1',name:'2.2 Present Process',        start:'2026-03-01',end:'2026-03-31',days:30,pct:0,status:'s-todo',cat:'b-bts-sub',parent:'t2'},
-  {id:'s2_3',group:'g1',name:'2.3 Negotiate Process',      start:'2026-04-01',end:'2026-04-30',days:29,pct:0,status:'s-todo',cat:'b-bts-sub',parent:'t2'},
-  {id:'s2_4',group:'g1',name:'2.4 Confirm Purchase (PO)',  start:'2026-05-01',end:'2026-05-31',days:30,pct:0,status:'s-todo',cat:'b-bts-sub',parent:'t2'},
-  {id:'s2_5',group:'g1',name:'2.5 Mover Start',            start:'2026-06-30',end:'2026-08-30',days:61,pct:0,status:'s-todo',cat:'b-move',   parent:'t2'},
-  // 3. IT Part
-  {id:'s3_1',group:'g1',name:'3.1 Bidding Process',        start:'2026-02-15',end:'2026-03-31',days:44,pct:0,status:'s-todo',cat:'b-design', parent:'t3'},
-  {id:'s3_2',group:'g1',name:'3.2 Order',                  start:'2026-03-15',end:'2026-06-15',days:92,pct:0,status:'s-todo',cat:'b-design', parent:'t3'},
-  {id:'s3_3',group:'g1',name:'3.3 Installation on Site',   start:'2026-06-15',end:'2026-09-15',days:92,pct:0,status:'s-todo',cat:'b-design', parent:'t3'},
-  // 4. Office Appliances
-  {id:'s4_1',group:'g1',name:'4.1 Survey Checklist',       start:'2026-03-01',end:'2026-03-31',days:30,pct:0,status:'s-todo',cat:'b-bts-sub',parent:'t4'},
-  {id:'s4_2',group:'g1',name:'4.2 Confirm List',           start:'2026-03-15',end:'2026-04-15',days:31,pct:0,status:'s-todo',cat:'b-bts-sub',parent:'t4'},
-  {id:'s4_3',group:'g1',name:'4.3 Negotiate Process',      start:'2026-04-01',end:'2026-04-30',days:29,pct:0,status:'s-todo',cat:'b-bts-sub',parent:'t4'},
-  {id:'s4_4',group:'g1',name:'4.4 Confirm Purchase (PO)',  start:'2026-05-01',end:'2026-05-31',days:30,pct:0,status:'s-todo',cat:'b-bts-sub',parent:'t4'},
-  // 5. Design Develop
-  {id:'s5_1',group:'g1',name:'5.1 Design Drawing Approval',start:'2026-02-01',end:'2026-02-28',days:27,pct:0,status:'s-todo',cat:'b-design', parent:'t5'},
-  {id:'s5_2',group:'g1',name:'5.2 Submit to Building Approval',start:'2026-02-15',end:'2026-02-28',days:13,pct:0,status:'s-todo',cat:'b-design',parent:'t5'},
-  // 6. Construction Ph.1
-  {id:'s6_1',group:'g1',name:'6.1 21Fl.',                  start:'2026-03-01',end:'2026-09-15',days:198,pct:0,status:'s-todo',cat:'b-bts',   parent:'t6'},
-  {id:'s6_2',group:'g1',name:'6.2 22Fl.',                  start:'2026-03-01',end:'2026-09-22',days:205,pct:0,status:'s-todo',cat:'b-bts',   parent:'t6'},
-  {id:'s6_3',group:'g1',name:'6.3 23Fl.',                  start:'2026-03-01',end:'2026-09-29',days:212,pct:0,status:'s-todo',cat:'b-bts',   parent:'t6'},
-  {id:'s6_4',group:'g1',name:'6.4 24Fl.',                  start:'2026-03-01',end:'2026-10-06',days:219,pct:0,status:'s-todo',cat:'b-bts',   parent:'t6'},
-  {id:'s6_5',group:'g1',name:'6.5 26Fl.',                  start:'2026-03-01',end:'2026-10-13',days:226,pct:0,status:'s-todo',cat:'b-bts',   parent:'t6'},
-  {id:'s6_6',group:'g1',name:'6.6 27Fl.',                  start:'2026-03-01',end:'2026-10-20',days:233,pct:0,status:'s-todo',cat:'b-bts',   parent:'t6'},
-  {id:'s6_7',group:'g1',name:'6.7 28Fl.',                  start:'2026-03-01',end:'2026-10-27',days:240,pct:0,status:'s-todo',cat:'b-bts',   parent:'t6'},
-  // 7. Move-in Ph.1
-  {id:'s7_1',group:'g1',name:'7.1 21Fl.',                  start:'2026-09-11',end:'2026-09-14',days:3, pct:0,status:'s-todo',cat:'b-move',   parent:'t7'},
-  {id:'s7_2',group:'g1',name:'7.2 22Fl.',                  start:'2026-09-18',end:'2026-09-21',days:3, pct:0,status:'s-todo',cat:'b-move',   parent:'t7'},
-  {id:'s7_3',group:'g1',name:'7.3 23Fl.',                  start:'2026-09-25',end:'2026-09-28',days:3, pct:0,status:'s-todo',cat:'b-move',   parent:'t7'},
-  {id:'s7_4',group:'g1',name:'7.4 24Fl.',                  start:'2026-10-02',end:'2026-10-05',days:3, pct:0,status:'s-todo',cat:'b-move',   parent:'t7'},
-  {id:'s7_5',group:'g1',name:'7.5 26Fl.',                  start:'2026-10-09',end:'2026-10-12',days:3, pct:0,status:'s-todo',cat:'b-move',   parent:'t7'},
-  {id:'s7_6',group:'g1',name:'7.6 27Fl.',                  start:'2026-10-16',end:'2026-10-19',days:3, pct:0,status:'s-todo',cat:'b-move',   parent:'t7'},
-  {id:'s7_7',group:'g1',name:'7.7 28Fl.',                  start:'2026-10-23',end:'2026-10-26',days:3, pct:0,status:'s-todo',cat:'b-move',   parent:'t7'},
-  // 8. Construction Ph.2
-  {id:'s8_1',group:'g1',name:'8.1 25Fl.',                  start:'2026-05-01',end:'2026-10-15',days:167,pct:0,status:'s-todo',cat:'b-bts',   parent:'t8'},
-  {id:'s8_2',group:'g1',name:'8.2 29Fl.',                  start:'2026-05-01',end:'2026-10-22',days:174,pct:0,status:'s-todo',cat:'b-bts',   parent:'t8'},
-  // 9. Move-in Ph.2
-  {id:'s9_1',group:'g1',name:'9.1 25Fl.',                  start:'2026-10-09',end:'2026-10-12',days:3, pct:0,status:'s-todo',cat:'b-move',   parent:'t9'},
-  {id:'s9_2',group:'g1',name:'9.2 29Fl.',                  start:'2026-10-16',end:'2026-10-19',days:3, pct:0,status:'s-todo',cat:'b-move',   parent:'t9'},
-  // 10. Renovation Ari Hills
-  {id:'s10_1',group:'g2',name:'10.1 9Fl.',                 start:'2026-09-14',end:'2026-10-14',days:30,pct:0,status:'s-todo',cat:'b-ari',    parent:'t10'},
-  {id:'s10_2',group:'g2',name:'10.2 10Fl.',                start:'2026-09-21',end:'2026-10-21',days:30,pct:0,status:'s-todo',cat:'b-ari',    parent:'t10'},
-  {id:'s10_3',group:'g2',name:'10.3 11Fl.',                start:'2026-09-28',end:'2026-10-28',days:30,pct:0,status:'s-todo',cat:'b-ari',    parent:'t10'},
-  {id:'s10_4',group:'g2',name:'10.4 12Fl.',                start:'2026-10-05',end:'2026-11-04',days:30,pct:0,status:'s-todo',cat:'b-ari',    parent:'t10'},
-  {id:'s10_5',group:'g2',name:'10.5 13Fl.',                start:'2026-10-12',end:'2026-11-11',days:30,pct:0,status:'s-todo',cat:'b-ari',    parent:'t10'},
-  {id:'s10_6',group:'g2',name:'10.6 14Fl.',                start:'2026-10-19',end:'2026-11-18',days:30,pct:0,status:'s-todo',cat:'b-ari',    parent:'t10'},
-  {id:'s10_7',group:'g2',name:'10.7 15Fl.',                start:'2026-10-26',end:'2026-11-25',days:30,pct:0,status:'s-todo',cat:'b-ari',    parent:'t10'},
-  // 11. Move-in KSL→Ari Hills
-  {id:'s11_1',group:'g2',name:'11.1 9Fl.',                 start:'2026-09-11',end:'2026-09-14',days:3, pct:0,status:'s-todo',cat:'b-move',   parent:'t11'},
-  {id:'s11_2',group:'g2',name:'11.2 11Fl.',                start:'2026-09-18',end:'2026-09-21',days:3, pct:0,status:'s-todo',cat:'b-move',   parent:'t11'},
-  {id:'s11_3',group:'g2',name:'11.3 14Fl.',                start:'2026-09-25',end:'2026-09-28',days:3, pct:0,status:'s-todo',cat:'b-move',   parent:'t11'},
-  {id:'s11_4',group:'g2',name:'11.4 15Fl.',                start:'2026-10-02',end:'2026-10-05',days:3, pct:0,status:'s-todo',cat:'b-move',   parent:'t11'},
-  // 12. Move-Out Ari Hills→BTS
-  {id:'s12_1',group:'g2',name:'12.1 9Fl.',                 start:'2026-09-11',end:'2026-09-14',days:3, pct:0,status:'s-todo',cat:'b-move',   parent:'t12'},
-  {id:'s12_2',group:'g2',name:'12.2 10Fl.',                start:'2026-09-18',end:'2026-09-21',days:3, pct:0,status:'s-todo',cat:'b-move',   parent:'t12'},
-  {id:'s12_3',group:'g2',name:'12.3 11Fl.',                start:'2026-09-25',end:'2026-09-28',days:3, pct:0,status:'s-todo',cat:'b-move',   parent:'t12'},
-  {id:'s12_4',group:'g2',name:'12.4 12Fl.',                start:'2026-10-02',end:'2026-10-05',days:3, pct:0,status:'s-todo',cat:'b-move',   parent:'t12'},
-  {id:'s12_5',group:'g2',name:'12.5 13Fl.',                start:'2026-10-09',end:'2026-10-12',days:3, pct:0,status:'s-todo',cat:'b-move',   parent:'t12'},
-  {id:'s12_6',group:'g2',name:'12.6 14Fl.',                start:'2026-10-16',end:'2026-10-19',days:3, pct:0,status:'s-todo',cat:'b-move',   parent:'t12'},
-  {id:'s12_7',group:'g2',name:'12.7 15Fl.',                start:'2026-10-23',end:'2026-10-26',days:3, pct:0,status:'s-todo',cat:'b-move',   parent:'t12'},
-  {id:'s12_8',group:'g2',name:'12.8 16Fl.',                start:'2026-10-30',end:'2026-11-02',days:3, pct:0,status:'s-todo',cat:'b-move',   parent:'t12'},
-  // 13. Reinstate Ari Hills
-  {id:'s13_1',group:'g2',name:'13.1 16Fl.',                start:'2026-11-05',end:'2026-12-05',days:30,pct:0,status:'s-todo',cat:'b-reinstate',parent:'t13'},
-  // 14. Move-Out KSL→Ari Hills
-  {id:'s14_1',group:'g3',name:'14.1 11Fl.',                start:'2026-09-11',end:'2026-09-14',days:3, pct:0,status:'s-todo',cat:'b-ksl',    parent:'t14'},
-  {id:'s14_2',group:'g3',name:'14.2 12Fl.',                start:'2026-09-18',end:'2026-09-21',days:3, pct:0,status:'s-todo',cat:'b-ksl',    parent:'t14'},
-  {id:'s14_3',group:'g3',name:'14.3 14Fl.',                start:'2026-09-25',end:'2026-09-28',days:3, pct:0,status:'s-todo',cat:'b-ksl',    parent:'t14'},
-  {id:'s14_4',group:'g3',name:'14.4 15Fl.',                start:'2026-10-02',end:'2026-10-05',days:3, pct:0,status:'s-todo',cat:'b-ksl',    parent:'t14'},
-  // 15. Reinstate KSL
-  {id:'s15_1',group:'g3',name:'15.1 11Fl.',                start:'2026-09-17',end:'2026-10-17',days:30,pct:0,status:'s-todo',cat:'b-reinstate',parent:'t15'},
-  {id:'s15_2',group:'g3',name:'15.2 12Fl.',                start:'2026-09-24',end:'2026-10-24',days:30,pct:0,status:'s-todo',cat:'b-reinstate',parent:'t15'},
-  {id:'s15_3',group:'g3',name:'15.3 14Fl.',                start:'2026-10-01',end:'2026-10-31',days:30,pct:0,status:'s-todo',cat:'b-reinstate',parent:'t15'},
-  {id:'s15_4',group:'g3',name:'15.4 15Fl.',                start:'2026-10-08',end:'2026-11-07',days:30,pct:0,status:'s-todo',cat:'b-reinstate',parent:'t15'},
-];
-
-const STATUS_MAP = {
-  's-todo':'To Do','s-inprog':'In Progress','s-review':'In Review',
-  's-done':'Done','s-block':'Blocked'
+// ── SHEET 0: Schedule_Start Construction BTS ──────
+var SHEET0 = {
+  title: 'Pre-Construction Schedule (BTS)',
+  overall: 0.3125,
+  groups: [
+    {
+      id:'g0', name:'PRE-CONSTRUCTION', color:'#4f8fff',
+      tasks:[
+        {id:'s0t1', no:'1', name:'Site Inspection',       s:'2026-03-02', e:'2026-03-06', days:4,  pct:100, cat:'cc-green'},
+        {id:'s0t2', no:'2', name:'Defect Part',            s:'2026-03-03', e:'2026-03-10', days:7,  pct:80,  cat:'cc-amber'},
+        {id:'s0t3', no:'3', name:'Handover',               s:'2026-03-16', e:'2026-03-31', days:15, pct:80,  cat:'cc-amber'},
+        {id:'s0t4', no:'4', name:'Insurance Cover Note',   s:'2026-03-09', e:'2026-03-16', days:7,  pct:100, cat:'cc-green'},
+      ]
+    },
+    {
+      id:'g1', name:'BTS · DESIGN', color:'#a06af8',
+      tasks:[
+        {id:'s0t5', no:'5', name:'Design Drawing to KF & NTL',       s:'2026-02-01', e:'2026-04-20', days:78,  pct:70, cat:'cc-violet'},
+        {id:'s0t6', no:'6', name:'Design Drawing Approve to BTS',     s:'2026-02-15', e:'2026-04-30', days:74,  pct:50, cat:'cc-red'},
+        {id:'s0t7', no:'7', name:'Start Onsite — Marking Line',       s:'2026-04-01', e:'2026-09-17', days:169, pct:5,  cat:'cc-teal'},
+      ]
+    }
+  ]
 };
 
-// Collapse state: main task id -> boolean (collapsed)
-const collapsed = {};
-
-// Active filter
-let activeFilter = 'all';
-let activeLocation = 'all';
-
-// ── Time helpers ──────────────────────────────────────────
-const parseD = s => new Date(s + 'T00:00:00');
-const fmt = d => d.toLocaleDateString('th-TH',{day:'2-digit',month:'short',year:'numeric'});
-
-let PROJECT_START = parseD('2026-02-01');
-let PROJECT_END   = parseD('2026-12-31');
-
-let COL_W = 70;
-const ZOOM_LEVELS = [40, 55, 70, 90, 120];
-let zoomIdx = 2;
-
-function setZoom(idx) {
-  zoomIdx = Math.max(0, Math.min(ZOOM_LEVELS.length-1, idx));
-  COL_W = ZOOM_LEVELS[zoomIdx];
-  document.getElementById('zoom-label').textContent = ['XS','S','W','L','XL'][zoomIdx];
-  build();
-}
-function zoomIn()  { setZoom(zoomIdx+1); }
-function zoomOut() { setZoom(zoomIdx-1); }
-
-function getWeeks() {
-  const weeks = []; let d = new Date(PROJECT_START);
-  d.setDate(d.getDate() - ((d.getDay()+6)%7));
-  while(d <= PROJECT_END) {
-    weeks.push(new Date(d));
-    d.setDate(d.getDate()+7);
-  }
-  return weeks;
-}
-
-function dayToX(d) {
-  const weeks = getWeeks();
-  const weekStart = weeks[0];
-  const dayFromWeekStart = (parseD(d instanceof Date ? d.toISOString().slice(0,10) : d) - weekStart) / 86400000;
-  return (dayFromWeekStart / 7) * COL_W;
-}
-
-// ── Build ──────────────────────────────────────────────────
-function build() {
-  buildHeader();
-  buildRows();
-  updateStats();
-}
-
-function buildHeader() {
-  const weeks = getWeeks();
-  const today = new Date(); today.setHours(0,0,0,0);
-
-  const months = [];
-  weeks.forEach((w,i) => {
-    const label = w.toLocaleDateString('en-US',{month:'short',year:'numeric'});
-    if (!months.length || months[months.length-1].label !== label) {
-      months.push({label, count:1});
-    } else {
-      months[months.length-1].count++;
+// ── SHEET 1: Keys Milestone Critical Path ─────────
+var SHEET1 = {
+  title: 'Keys Milestone — Critical Path',
+  overall: 0.105,
+  groups: [
+    {
+      id:'g0', name:'BTS · FURNITURE', color:'#f6a92e',
+      tasks:[
+        {id:'t1', no:'1', name:'Furniture (New BTS)', s:'2026-02-04', e:'2026-09-30', days:238, pct:30, cat:'cc-amber',
+          subs:[
+            {id:'t1_1', no:'1.1', name:'Specification',         s:'2026-02-04', e:'2026-03-22', days:46, pct:100, cat:'cc-green'},
+            {id:'t1_2', no:'1.2', name:'Selection Process',     s:'2026-03-23', e:'2026-04-03', days:11, pct:70,  cat:'cc-amber'},
+            {id:'t1_3', no:'1.3', name:'Negotiate Process',     s:'2026-03-15', e:'2026-03-31', days:16, pct:0,   cat:'cc-red'},
+            {id:'t1_4', no:'1.4', name:'Confirm Purchase (PO)', s:'2026-03-31', e:'2026-04-30', days:30, pct:0,   cat:'cc-red'},
+            {id:'t1_5', no:'1.5', name:'Production Time',       s:'2026-05-01', e:'2026-07-31', days:91, pct:0,   cat:'cc-amber'},
+            {id:'t1_6', no:'1.6', name:'Material Onsite',       s:'2026-08-01', e:'2026-08-31', days:30, pct:0,   cat:'cc-amber'},
+            {id:'t1_7', no:'1.7', name:'Installation',          s:'2026-08-07', e:'2026-09-30', days:54, pct:0,   cat:'cc-amber'},
+            {id:'t1_8', no:'1.8', name:'Spare Part BTS',        s:'2026-06-01', e:'2026-07-31', days:60, pct:0,   cat:'cc-amber'},
+            {id:'t1_9', no:'1.9', name:'Spare Part Ari Hills',  s:'2026-06-01', e:'2026-07-31', days:60, pct:0,   cat:'cc-amber'},
+          ]
+        },
+        {id:'t2', no:'2', name:'Mover', s:'2026-04-22', e:'2026-11-15', days:207, pct:0, cat:'cc-orange',
+          subs:[
+            {id:'t2_1', no:'2.1', name:'Present Company Profile',  s:'2026-04-07', e:'2026-04-10', days:1,  pct:0, cat:'cc-orange'},
+            {id:'t2_2', no:'2.2', name:'Site Survey',              s:'2026-04-20', e:'2026-04-21', days:1,  pct:0, cat:'cc-orange'},
+            {id:'t2_3', no:'2.3', name:'Send Quotation',           s:'2026-04-22', e:'2026-04-28', days:6,  pct:0, cat:'cc-orange'},
+            {id:'t2_4', no:'2.4', name:'Present Process/Price',    s:'2026-04-29', e:'2026-05-29', days:1,  pct:0, cat:'cc-orange'},
+            {id:'t2_5', no:'2.5', name:'Compare Price',            s:'2026-04-30', e:'2026-04-30', days:1,  pct:0, cat:'cc-orange'},
+            {id:'t2_6', no:'2.6', name:'Negotiate Process',        s:'2026-05-01', e:'2026-05-08', days:7,  pct:0, cat:'cc-orange'},
+            {id:'t2_7', no:'2.7', name:'Confirm PO',               s:'2026-05-11', e:'2026-05-18', days:7,  pct:0, cat:'cc-orange'},
+            {id:'t2_8', no:'2.8', name:'Mover Start',              s:'2026-09-15', e:'2026-11-15', days:61, pct:0, cat:'cc-orange'},
+          ]
+        },
+        {id:'t3', no:'3', name:'IT Part', s:'2026-02-15', e:'2026-09-15', days:212, pct:10, cat:'cc-sky',
+          subs:[
+            {id:'t3_1', no:'3.1', name:'Bidding Process',      s:'2026-02-15', e:'2026-03-31', days:44, pct:20, cat:'cc-sky'},
+            {id:'t3_2', no:'3.2', name:'Order',                s:'2026-03-15', e:'2026-06-15', days:92, pct:0,  cat:'cc-sky'},
+            {id:'t3_3', no:'3.3', name:'Installation on Site', s:'2026-06-15', e:'2026-09-15', days:92, pct:0,  cat:'cc-sky'},
+          ]
+        },
+        {id:'t4', no:'4', name:'Office Appliances', s:'2026-04-01', e:'2026-09-30', days:182, pct:0, cat:'cc-sky',
+          subs:[
+            {id:'t4_1', no:'4.1', name:'Survey Checklist',    s:'2026-04-01', e:'2026-04-20', days:19, pct:0, cat:'cc-sky'},
+            {id:'t4_2', no:'4.2', name:'Confirm List',        s:'2026-04-20', e:'2026-04-30', days:10, pct:0, cat:'cc-sky'},
+            {id:'t4_3', no:'4.3', name:'Negotiate Process',   s:'2026-04-30', e:'2026-05-15', days:15, pct:0, cat:'cc-sky'},
+            {id:'t4_4', no:'4.4', name:'Confirm PO',          s:'2026-05-01', e:'2026-06-30', days:60, pct:0, cat:'cc-sky'},
+          ]
+        },
+      ]
+    },
+    {
+      id:'g1', name:'BTS · DESIGN & CONSTRUCTION', color:'#a06af8',
+      tasks:[
+        {id:'t5', no:'5', name:'Design Develop', s:'2026-02-01', e:'2026-06-30', days:149, pct:40, cat:'cc-violet',
+          subs:[
+            {id:'t5_1', no:'5.1', name:'Design Drawing Approval',                       s:'2026-02-01', e:'2026-04-20', days:78, pct:50, cat:'cc-violet'},
+            {id:'t5_2', no:'5.2', name:'Submit Construction Drawing (Building Approval)', s:'2026-02-15', e:'2026-04-30', days:74, pct:20, cat:'cc-violet'},
+          ]
+        },
+        {id:'t6', no:'6', name:'Interior Construction Phase 1', s:'2026-03-01', e:'2026-10-27', days:240, pct:2, cat:'cc-teal',
+          subs:[
+            {id:'t6_1', no:'6.1', name:'21F',  s:'2026-04-01', e:'2026-09-17', days:169, pct:3, cat:'cc-teal'},
+            {id:'t6_2', no:'6.2', name:'22F',  s:'2026-04-01', e:'2026-09-17', days:169, pct:3, cat:'cc-teal'},
+            {id:'t6_3', no:'6.3', name:'23F',  s:'2026-03-23', e:'2026-10-01', days:192, pct:0, cat:'cc-teal'},
+            {id:'t6_4', no:'6.4', name:'24F',  s:'2026-03-01', e:'2026-10-06', days:219, pct:0, cat:'cc-teal'},
+            {id:'t6_5', no:'6.5', name:'26F',  s:'2026-03-01', e:'2026-10-13', days:226, pct:0, cat:'cc-teal'},
+            {id:'t6_6', no:'6.6', name:'27F',  s:'2026-03-01', e:'2026-10-20', days:233, pct:0, cat:'cc-teal'},
+            {id:'t6_7', no:'6.7', name:'28F',  s:'2026-03-01', e:'2026-10-27', days:240, pct:0, cat:'cc-teal'},
+          ]
+        },
+        {id:'t7', no:'7', name:'Move-in Ari Hills→BTS (Ph.1)', s:'2026-09-13', e:'2026-10-26', days:43, pct:0, cat:'cc-orange',
+          subs:[
+            {id:'t7_1', no:'7.1', name:'21F', s:'2026-09-13', e:'2026-09-16', days:3, pct:0, cat:'cc-orange'},
+            {id:'t7_2', no:'7.2', name:'22F', s:'2026-09-13', e:'2026-09-16', days:3, pct:0, cat:'cc-orange'},
+            {id:'t7_3', no:'7.3', name:'23F', s:'2026-09-27', e:'2026-09-30', days:3, pct:0, cat:'cc-orange'},
+            {id:'t7_4', no:'7.4', name:'24F', s:'2026-10-02', e:'2026-10-05', days:3, pct:0, cat:'cc-orange'},
+            {id:'t7_5', no:'7.5', name:'26F', s:'2026-10-09', e:'2026-10-12', days:3, pct:0, cat:'cc-orange'},
+            {id:'t7_6', no:'7.6', name:'27F', s:'2026-10-16', e:'2026-10-19', days:3, pct:0, cat:'cc-orange'},
+            {id:'t7_7', no:'7.7', name:'28F', s:'2026-10-23', e:'2026-10-26', days:3, pct:0, cat:'cc-orange'},
+          ]
+        },
+        {id:'t8', no:'8', name:'Interior Construction Phase 2', s:'2026-05-01', e:'2026-10-22', days:174, pct:0, cat:'cc-teal',
+          subs:[
+            {id:'t8_1', no:'8.1', name:'25F', s:'2026-05-01', e:'2026-10-15', days:167, pct:0, cat:'cc-teal'},
+            {id:'t8_2', no:'8.2', name:'29F', s:'2026-05-01', e:'2026-10-22', days:174, pct:0, cat:'cc-teal'},
+          ]
+        },
+        {id:'t9', no:'9', name:'Move-in Ari Hills→BTS (Ph.2)', s:'2026-10-09', e:'2026-10-19', days:10, pct:0, cat:'cc-orange',
+          subs:[
+            {id:'t9_1', no:'9.1', name:'25F', s:'2026-10-09', e:'2026-10-12', days:3, pct:0, cat:'cc-orange'},
+            {id:'t9_2', no:'9.2', name:'29F', s:'2026-10-16', e:'2026-10-19', days:3, pct:0, cat:'cc-orange'},
+          ]
+        },
+      ]
+    },
+    {
+      id:'g2', name:'ARI HILLS', color:'#38bdf8',
+      tasks:[
+        {id:'t10', no:'10', name:'Renovation', s:'2026-09-16', e:'2026-11-25', days:70, pct:0, cat:'cc-sky',
+          subs:[
+            {id:'t10_1', no:'10.1', name:'9F',  s:'2026-09-16', e:'2026-10-16', days:30, pct:0, cat:'cc-sky'},
+            {id:'t10_2', no:'10.2', name:'10F', s:'2026-09-16', e:'2026-10-16', days:30, pct:0, cat:'cc-sky'},
+            {id:'t10_3', no:'10.3', name:'11F', s:'2026-09-30', e:'2026-10-30', days:30, pct:0, cat:'cc-sky'},
+            {id:'t10_4', no:'10.4', name:'12F', s:'2026-10-05', e:'2026-11-04', days:30, pct:0, cat:'cc-sky'},
+            {id:'t10_5', no:'10.5', name:'13F', s:'2026-10-12', e:'2026-11-11', days:30, pct:0, cat:'cc-sky'},
+            {id:'t10_6', no:'10.6', name:'14F', s:'2026-10-19', e:'2026-11-18', days:30, pct:0, cat:'cc-sky'},
+            {id:'t10_7', no:'10.7', name:'15F', s:'2026-10-26', e:'2026-11-25', days:30, pct:0, cat:'cc-sky'},
+          ]
+        },
+        {id:'t11', no:'11', name:'Move-in (KSL→Ari Hills)', s:'2026-09-13', e:'2026-10-05', days:22, pct:0, cat:'cc-orange',
+          subs:[
+            {id:'t11_1', no:'11.1', name:'9F',  s:'2026-09-13', e:'2026-09-16', days:3, pct:0, cat:'cc-orange'},
+            {id:'t11_2', no:'11.2', name:'11F', s:'2026-09-13', e:'2026-09-16', days:3, pct:0, cat:'cc-orange'},
+            {id:'t11_3', no:'11.3', name:'14F', s:'2026-09-27', e:'2026-09-30', days:3, pct:0, cat:'cc-orange'},
+            {id:'t11_4', no:'11.4', name:'15F', s:'2026-10-02', e:'2026-10-05', days:3, pct:0, cat:'cc-orange'},
+          ]
+        },
+        {id:'t12', no:'12', name:'Move-Out (Ari Hills→BTS)', s:'2026-09-13', e:'2026-11-02', days:50, pct:0, cat:'cc-orange',
+          subs:[
+            {id:'t12_1', no:'12.1', name:'9F',  s:'2026-09-13', e:'2026-09-16', days:3, pct:0, cat:'cc-orange'},
+            {id:'t12_2', no:'12.2', name:'10F', s:'2026-09-13', e:'2026-09-16', days:3, pct:0, cat:'cc-orange'},
+            {id:'t12_3', no:'12.3', name:'11F', s:'2026-09-27', e:'2026-09-30', days:3, pct:0, cat:'cc-orange'},
+            {id:'t12_4', no:'12.4', name:'12F', s:'2026-10-02', e:'2026-10-05', days:3, pct:0, cat:'cc-orange'},
+            {id:'t12_5', no:'12.5', name:'13F', s:'2026-10-09', e:'2026-10-12', days:3, pct:0, cat:'cc-orange'},
+            {id:'t12_6', no:'12.6', name:'14F', s:'2026-10-16', e:'2026-10-19', days:3, pct:0, cat:'cc-orange'},
+            {id:'t12_7', no:'12.7', name:'15F', s:'2026-10-23', e:'2026-10-26', days:3, pct:0, cat:'cc-orange'},
+            {id:'t12_8', no:'12.8', name:'16F', s:'2026-10-30', e:'2026-11-02', days:3, pct:0, cat:'cc-orange'},
+          ]
+        },
+        {id:'t13', no:'13', name:'Reinstate Ari Hills', s:'2026-11-05', e:'2026-12-05', days:30, pct:0, cat:'cc-blue',
+          subs:[
+            {id:'t13_1', no:'13.1', name:'16F', s:'2026-11-05', e:'2026-12-05', days:30, pct:0, cat:'cc-blue'},
+          ]
+        },
+      ]
+    },
+    {
+      id:'g3', name:'KSL', color:'#f472b6',
+      tasks:[
+        {id:'t14', no:'14', name:'Move-Out (KSL→Ari Hills)', s:'2026-09-13', e:'2026-10-05', days:22, pct:0, cat:'cc-pink',
+          subs:[
+            {id:'t14_1', no:'14.1', name:'11F', s:'2026-09-13', e:'2026-09-16', days:3, pct:0, cat:'cc-pink'},
+            {id:'t14_2', no:'14.2', name:'12F', s:'2026-09-13', e:'2026-09-16', days:3, pct:0, cat:'cc-pink'},
+            {id:'t14_3', no:'14.3', name:'14F', s:'2026-09-27', e:'2026-09-30', days:3, pct:0, cat:'cc-pink'},
+            {id:'t14_4', no:'14.4', name:'15F', s:'2026-10-02', e:'2026-10-05', days:3, pct:0, cat:'cc-pink'},
+          ]
+        },
+        {id:'t15', no:'15', name:'Reinstate KSL', s:'2026-04-01', e:'2026-11-07', days:220, pct:0, cat:'cc-pink',
+          subs:[
+            {id:'t15_1', no:'15.1', name:'Present Process',   s:'2026-04-01', e:'2026-05-01', days:30, pct:0, cat:'cc-pink'},
+            {id:'t15_2', no:'15.2', name:'Negotiate Process', s:'2026-04-15', e:'2026-05-14', days:29, pct:0, cat:'cc-pink'},
+            {id:'t15_3', no:'15.3', name:'Confirm PO',        s:'2026-05-01', e:'2026-05-31', days:30, pct:0, cat:'cc-pink'},
+            {id:'t15_4', no:'15.4', name:'11F', s:'2026-09-19', e:'2026-10-19', days:30, pct:0, cat:'cc-pink'},
+            {id:'t15_5', no:'15.5', name:'12F', s:'2026-09-19', e:'2026-10-19', days:30, pct:0, cat:'cc-pink'},
+            {id:'t15_6', no:'15.6', name:'14F', s:'2026-10-03', e:'2026-11-02', days:30, pct:0, cat:'cc-pink'},
+            {id:'t15_7', no:'15.7', name:'15F', s:'2026-10-08', e:'2026-11-07', days:30, pct:0, cat:'cc-pink'},
+          ]
+        },
+      ]
     }
-  });
+  ]
+};
 
-  let monthHtml = '', weekHtml = '';
-  months.forEach(m => {
-    monthHtml += `<div class="month-cell" style="width:${m.count*COL_W}px;flex-shrink:0">${m.label}</div>`;
-  });
-  weeks.forEach((w,i) => {
-    const isToday = today >= w && today < new Date(w.getTime()+7*86400000);
-    const label = 'W'+(i+1);
-    weekHtml += `<div class="week-cell${isToday?' today-col':''}" style="width:${COL_W}px;flex-shrink:0">${label}</div>`;
-  });
+// ═══════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════
+var currentSheet = 0;
+var currentFilter = 'all';
+var expandedGroups = {};   // gid -> bool (collapsed)
+var expandedTasks = {};    // tid -> bool (subs visible)
+var allExpanded = false;
 
-  document.getElementById('ganttHeader').innerHTML =
-    `<div class="month-row">${monthHtml}</div><div class="week-row">${weekHtml}</div>`;
+// Zoom
+var ZW  = [44,58,74,92,116];
+var ZLB = ['XS','SM','WK','MD','LG'];
+var zi  = 2, CW = ZW[zi];
+
+// Grid start: Jan 26 2026 (Mon before Feb)
+var D0_S0 = new Date(2026, 0, 26);  // Sheet0 start
+var D0_S1 = new Date(2026, 0, 26);  // Sheet1 start
+
+function D0(){ return currentSheet===0 ? D0_S0 : D0_S1; }
+function SHEET(){ return currentSheet===0 ? SHEET0 : SHEET1; }
+function gridEnd(){ return currentSheet===0 ? new Date(2026,8,28) : new Date(2026,11,14); }
+
+// ═══════════════════════════════════════════════════
+// HELPERS
+// ═══════════════════════════════════════════════════
+var MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+function toDate(ds){ return new Date(ds + 'T00:00:00'); }
+function toX(ds){ var d=toDate(ds); return ((d-D0())/86400000)/7*CW; }
+function todX(){ return ((TODAY-D0())/86400000)/7*CW; }
+function fmt(ds){ var d=toDate(ds); return ('0'+d.getDate()).slice(-2)+' '+MONTHS[d.getMonth()]+' '+String(d.getFullYear()).slice(2); }
+
+function statusOf(t){
+  var end = toDate(t.e);
+  if(t.pct===100) return 'done';
+  if(end<TODAY && t.pct<100) return 'late';
+  if(t.pct>0) return 'prog';
+  return 'new';
+}
+var SL = {done:'Complete',late:'Overdue',prog:'In Progress',new:'Not Started'};
+var SC = {done:'bd',late:'bl',prog:'bp',new:'bn'};
+
+function getWeeks(){
+  var out=[], d=new Date(D0().getTime()), end=gridEnd();
+  while(d<=end){ out.push(new Date(d)); d.setDate(d.getDate()+7); }
+  return out;
 }
 
-function buildRows() {
-  const weeks = getWeeks();
-  const totalW = weeks.length * COL_W;
-  const today = new Date(); today.setHours(0,0,0,0);
-  const todayX = dayToX(today);
-
-  let gridCols = '';
-  weeks.forEach((w,i) => {
-    const isToday = today >= w && today < new Date(w.getTime()+7*86400000);
-    gridCols += `<div style="position:absolute;left:${i*COL_W}px;top:0;bottom:0;width:${COL_W}px;border-right:1px solid var(--border${isToday?'2':''})"></div>`;
-  });
-
-  let taskRowsHtml = '';
-  let ganttRowsHtml = `<div style="position:relative;width:${totalW}px">${gridCols}`;
-  ganttRowsHtml += `<div class="today-marker" style="left:${todayX}px"></div>`;
-
-  let barIdx = 0;
-
-  GROUPS.forEach(g => {
-    const gMainTasks = MAIN_TASKS.filter(t => t.group === g.id);
-    if (!gMainTasks.length) return;
-
-    // Location filter
-    if (activeLocation !== 'all') {
-      const locMap = { bts:'g1', arihills:'g2', ksl:'g3' };
-      if (locMap[activeLocation] !== g.id) return;
-    }
-
-    // Group header
-    const gTaskCount = gMainTasks.length;
-    taskRowsHtml += `
-      <div class="task-row group-row">
-        <div class="group-label" style="color:${g.color}">${g.name}</div>
-        <div class="group-count">${gTaskCount} tasks</div>
-      </div>`;
-    ganttRowsHtml += `<div class="gantt-row group-bg" style="width:${totalW}px"></div>`;
-
-    gMainTasks.forEach(t => {
-      if (activeFilter !== 'all' && t.status !== activeFilter) return;
-
-      const startX = dayToX(t.start);
-      const endX   = dayToX(t.end) + COL_W;
-      const width  = Math.max(endX - startX, 30);
-      const delay  = barIdx * 28;
-      const isCollapsed = collapsed[t.id];
-      const subCount = SUB_TASKS.filter(s => s.parent === t.id).length;
-
-      // Task row (left panel)
-      taskRowsHtml += `
-        <div class="task-row" onclick="toggleCollapse('${t.id}',this)" id="tr-${t.id}">
-          <div class="collapse-btn${isCollapsed?' collapsed':''}" id="cb-${t.id}">▾</div>
-          <div class="task-info">
-            <div class="task-name">${t.name}</div>
-            <div class="task-meta">${t.days}d &nbsp;·&nbsp; ${t.start.slice(5)} → ${t.end.slice(5)}${subCount?' &nbsp;·&nbsp; '+subCount+' sub':''}</div>
-          </div>
-          <div class="status-pill ${t.status}">${STATUS_MAP[t.status]}</div>
-        </div>`;
-
-      // Gantt bar (right panel)
-      ganttRowsHtml += `
-        <div class="gantt-row task-height" style="width:${totalW}px" id="gr-${t.id}">
-          <div class="bar-wrap" id="bar-${t.id}"
-               style="left:${startX}px;width:${width}px;animation-delay:${delay}ms"
-               onmouseenter="showTip(event,'${t.id}','main')" onmouseleave="hideTip()">
-            <div class="bar-inner ${t.cat}">
-              <div class="bar-progress" style="transform:scaleX(${t.pct/100})"></div>
-              ${width >= 80 ? `<span style="position:relative;z-index:1;text-shadow:0 1px 2px rgba(0,0,0,.2)">${t.name}</span>` : ''}
-            </div>
-          </div>
-        </div>`;
-      barIdx++;
-
-      // Sub-tasks
-      if (!isCollapsed) {
-        const subs = SUB_TASKS.filter(s => s.parent === t.id);
-        subs.forEach(s => {
-          if (activeFilter !== 'all' && s.status !== activeFilter) return;
-
-          const sx = dayToX(s.start);
-          const ex = dayToX(s.end) + COL_W;
-          const sw = Math.max(ex - sx, 16);
-          const sd = barIdx * 22;
-
-          taskRowsHtml += `
-            <div class="task-row sub-row" id="tr-${s.id}">
-              <div class="task-info">
-                <div class="task-name">${s.name}</div>
-                <div class="task-meta">${s.days}d &nbsp;·&nbsp; ${s.start.slice(5)} → ${s.end.slice(5)}</div>
-              </div>
-              <div class="status-pill ${s.status}">${STATUS_MAP[s.status]}</div>
-            </div>`;
-
-          ganttRowsHtml += `
-            <div class="gantt-row sub-height" style="width:${totalW}px" id="gr-${s.id}">
-              <div class="bar-wrap sub-bar" id="bar-${s.id}"
-                   style="left:${sx}px;width:${sw}px;animation-delay:${sd}ms"
-                   onmouseenter="showTip(event,'${s.id}','sub')" onmouseleave="hideTip()">
-                <div class="bar-inner ${s.cat}">
-                  <div class="bar-progress" style="transform:scaleX(${s.pct/100})"></div>
-                  ${sw >= 90 ? `<span style="position:relative;z-index:1;font-size:9px">${s.name}</span>` : ''}
-                </div>
-              </div>
-            </div>`;
-          barIdx++;
-        });
-      }
+function flatTasks(groups, filter){
+  var out=[];
+  for(var gi=0;gi<groups.length;gi++){
+    var g=groups[gi];
+    var visibleTasks=g.tasks.filter(function(t){
+      if(filter==='all') return true;
+      var st=statusOf(t);
+      if(filter==='prog') return st==='prog';
+      if(filter==='done') return st==='done';
+      if(filter==='late') return st==='late';
+      return true;
     });
-  });
-
-  ganttRowsHtml += '</div>';
-
-  document.getElementById('taskRows').innerHTML  = taskRowsHtml;
-  document.getElementById('ganttBody').innerHTML = ganttRowsHtml;
-  document.getElementById('ganttChart').style.width = totalW + 'px';
+    if(!visibleTasks.length) continue;
+    out.push({type:'group', g:g});
+    if(expandedGroups[g.id]===false) continue;
+    for(var ti=0;ti<visibleTasks.length;ti++){
+      var t=visibleTasks[ti]; t.st=statusOf(t);
+      out.push({type:'task', t:t});
+      if(expandedTasks[t.id] && t.subs){
+        for(var si=0;si<t.subs.length;si++){
+          var s=t.subs[si]; s.st=statusOf(s);
+          out.push({type:'sub', t:s, parent:t});
+        }
+      }
+    }
+  }
+  return out;
 }
 
-function updateStats() {
-  const allTasks = [...MAIN_TASKS, ...SUB_TASKS];
-  const total = MAIN_TASKS.length;
-  const done  = allTasks.filter(t=>t.status==='s-done').length;
-  const today = new Date(); today.setHours(0,0,0,0);
-  const late  = MAIN_TASKS.filter(t=>t.status!=='s-done'&&parseD(t.end)<today).length;
+// ═══════════════════════════════════════════════════
+// RENDER
+// ═══════════════════════════════════════════════════
+function render(){
+  var sh = SHEET();
+  var weeks = getWeeks();
+  var totalW = weeks.length * CW;
+  var tx = todX();
+  var rows = flatTasks(sh.groups, currentFilter);
 
-  document.getElementById('s-total').textContent = total;
-  document.getElementById('s-done').textContent  = done;
-  document.getElementById('s-late').textContent  = late;
-  if (document.getElementById('h-total')) document.getElementById('h-total').textContent = total;
-  if (document.getElementById('h-done'))  document.getElementById('h-done').textContent  = done;
+  // update sidebar
+  updateSidebar(sh);
+
+  // ── Header ──
+  var months=[];
+  for(var i=0;i<weeks.length;i++){
+    var w=weeks[i], lb=MONTHS[w.getMonth()]+' '+w.getFullYear();
+    if(!months.length||months[months.length-1].lb!==lb) months.push({lb:lb,cnt:1});
+    else months[months.length-1].cnt++;
+  }
+  var mH='',wH='';
+  for(var i=0;i<months.length;i++) mH+='<div class="m-cell" style="width:'+(months[i].cnt*CW)+'px">'+months[i].lb+'</div>';
+  for(var i=0;i<weeks.length;i++){
+    var w=weeks[i]; var isNow=TODAY>=w&&TODAY<new Date(w.getTime()+7*86400000);
+    wH+='<div class="w-cell'+(isNow?' nw':'')+'" style="width:'+CW+'px">'
+      +'<span style="font-size:9px;font-weight:500">'+(w.getMonth()+1)+'/'+w.getDate()+'</span>'
+      +'<span style="font-size:8px;opacity:.5">W'+(i+1)+'</span></div>';
+  }
+  var flagH='<div class="today-flag" style="left:'+tx+'px">TODAY</div>';
+  document.getElementById('chHdr').innerHTML='<div class="m-row">'+mH+'</div><div class="w-row">'+wH+flagH+'</div>';
+
+  // ── Grid lines (shared bg div) ──
+  var grid='';
+  for(var i=0;i<weeks.length;i++){
+    var w=weeks[i]; var isNow=TODAY>=w&&TODAY<new Date(w.getTime()+7*86400000);
+    grid+='<div class="gl'+(isNow?' ngl':'')+'" style="left:'+(i*CW)+'px"></div>';
+  }
+  var bx=Math.floor((TODAY-D0())/86400000/7)*CW;
+  grid+='<div class="t-band" style="left:'+bx+'px;width:'+CW+'px;top:0;bottom:0;position:absolute;pointer-events:none"></div>';
+  grid+='<div class="t-line" style="left:'+tx+'px"></div>';
+
+  // ── Rows ──
+  var tlH='', crH='';
+  var barIdx=0;
+
+  for(var ri=0;ri<rows.length;ri++){
+    var row=rows[ri];
+    if(row.type==='group'){
+      var g=row.g;
+      var isCollapsed = expandedGroups[g.id]===false;
+      tlH+='<div class="tr g-hdr" onclick="toggleGroup(\''+g.id+'\')">'
+        +'<span class="collapser'+(isCollapsed?'':' open')+'" id="col-'+g.id+'">▶</span>'
+        +'<div class="g-lbl" style="color:'+g.color+';margin-left:4px">'+g.name+'</div>'
+        +'</div>';
+      crH+='<div class="cr g-bg" style="width:'+totalW+'px"></div>';
+    } else if(row.type==='task'){
+      var t=row.t;
+      var x1=toX(t.s), x2=toX(t.e)+CW, bw=Math.max(x2-x1,20);
+      var darkW=Math.round((100-t.pct)/100*bw);
+      var delay=barIdx*55;
+      var hasSubs=t.subs&&t.subs.length>0;
+      var isExp=expandedTasks[t.id];
+      var stKey=t.st;
+      tlH+='<div class="tr" id="tl-'+t.id+'" onclick="hlTask(\''+t.id+'\')">'
+        +(hasSubs?'<span class="collapser'+(isExp?' open':'')
+          +'" id="texp-'+t.id+'" onclick="event.stopPropagation();toggleTask(\''+t.id+'\')">▶</span>':'<span style="width:14px;flex-shrink:0"></span>')
+        +'<div class="tr-no">'+t.no+'</div>'
+        +'<div class="tr-info">'
+          +'<div class="tr-name">'+t.name+'</div>'
+          +'<div class="tr-date">'+fmt(t.s)+' → '+fmt(t.e)+' · '+t.days+'d</div>'
+        +'</div>'
+        +'<div class="badge '+SC[stKey]+'">'+SL[stKey]+'</div>'
+        +'</div>';
+      crH+='<div class="cr" id="cr-'+t.id+'" style="width:'+totalW+'px">'
+        +'<div class="bar '+t.cat+'" id="bar-'+t.id+'"'
+          +' style="left:'+x1+'px;width:'+bw+'px;animation-delay:'+delay+'ms"'
+          +' onmouseenter="showTip(event,\''+t.id+'\',false)" onmouseleave="hideTip()">'
+          +'<div class="bar-bg '+t.cat+'"></div>'
+          +'<div class="bar-shine"></div>'
+          +'<div class="bar-dark" style="width:'+darkW+'px;right:0;left:auto;position:absolute"></div>'
+          +'<div class="bar-lbl">'+(CW>60?t.name:'')+'</div>'
+        +'</div>'
+        +'</div>';
+      barIdx++;
+    } else if(row.type==='sub'){
+      var t=row.t;
+      var x1=toX(t.s), x2=toX(t.e)+CW, bw=Math.max(x2-x1,16);
+      var darkW=Math.round((100-t.pct)/100*bw);
+      var stKey=t.st;
+      tlH+='<div class="tr sub" id="tl-'+t.id+'" onclick="hlTask(\''+t.id+'\')">'
+        +'<div style="width:14px;flex-shrink:0"></div>'
+        +'<div class="tr-no" style="font-size:8px">'+t.no+'</div>'
+        +'<div class="tr-info">'
+          +'<div class="tr-sub-name">'+t.name+'</div>'
+          +'<div class="tr-date">'+fmt(t.s)+' → '+fmt(t.e)+'</div>'
+        +'</div>'
+        +'<div class="badge '+SC[stKey]+'" style="font-size:8px">'+SL[stKey]+'</div>'
+        +'</div>';
+      crH+='<div class="cr sub-bg" id="cr-'+t.id+'" style="width:'+totalW+'px">'
+        +'<div class="bar sbar '+t.cat+'" id="bar-'+t.id+'"'
+          +' style="left:'+x1+'px;width:'+bw+'px;animation-delay:'+(barIdx*30)+'ms;height:20px"'
+          +' onmouseenter="showTip(event,\''+t.id+'\',true)" onmouseleave="hideTip()">'
+          +'<div class="bar-bg '+t.cat+'"></div>'
+          +'<div class="bar-shine"></div>'
+          +'<div class="bar-dark" style="width:'+darkW+'px;right:0;left:auto;position:absolute"></div>'
+          +'<div class="bar-lbl" style="font-size:9px">'+(CW>80?t.name:'')+'</div>'
+        +'</div>'
+        +'</div>';
+      barIdx++;
+    }
+  }
+
+  document.getElementById('tlRows').innerHTML = tlH;
+  document.getElementById('chBody').innerHTML = '<div style="position:relative;width:'+totalW+'px">'+grid+crH+'</div>';
+  document.getElementById('chPanel').style.width = totalW+'px';
+  document.getElementById('tbTitle').textContent = sh.title;
+
+  // scroll to today
+  setTimeout(function(){
+    var gw=document.getElementById('gw');
+    gw.scrollLeft=Math.max(0, tx-180);
+  }, 60);
 }
 
-// ── Collapse ──────────────────────────────────────────────
-function toggleCollapse(id, el) {
-  collapsed[id] = !collapsed[id];
-  build();
-  // scroll to keep position
-  const bar = document.getElementById('bar-'+id);
-  if(bar) bar.scrollIntoView({block:'nearest',behavior:'smooth'});
+function updateSidebar(sh){
+  var allTasks=[];
+  for(var gi=0;gi<sh.groups.length;gi++){
+    var g=sh.groups[gi];
+    for(var ti=0;ti<g.tasks.length;ti++) allTasks.push(g.tasks[ti]);
+  }
+  var total=allTasks.length;
+  var done=allTasks.filter(function(t){return t.pct===100}).length;
+  var late=allTasks.filter(function(t){return statusOf(t)==='late'}).length;
+  var pct=Math.round(sh.overall*100);
+
+  document.getElementById('stTotal').textContent=total;
+  document.getElementById('stDone').textContent=done;
+  document.getElementById('stLate').textContent=late;
+  document.getElementById('sbPct').textContent=pct+'%';
+  document.getElementById('sbDesc').textContent=sh.title.split('—')[0].trim();
+  document.getElementById('ringPct').textContent=pct+'%';
+  document.getElementById('pfillBar').style.width=pct+'%';
+  var offset=138.2*(1-sh.overall);
+  document.getElementById('ringArc').setAttribute('stroke-dashoffset',offset.toFixed(1));
+  document.getElementById('topChipPct').textContent='Overall '+pct+'%';
+
+  // info
+  var allDates=[];
+  for(var i=0;i<allTasks.length;i++){
+    allDates.push(toDate(allTasks[i].s).getTime());
+    allDates.push(toDate(allTasks[i].e).getTime());
+  }
+  var minD=new Date(Math.min.apply(null,allDates));
+  var maxD=new Date(Math.max.apply(null,allDates));
+  document.getElementById('infoStart').textContent=fmt(minD.toISOString().slice(0,10));
+  document.getElementById('infoEnd').textContent=fmt(maxD.toISOString().slice(0,10));
+
+  // sidebar list
+  var sbH='';
+  for(var i=0;i<allTasks.length;i++){
+    var t=allTasks[i], st=statusOf(t);
+    var dc=st==='done'?'#1fd6a0':st==='late'?'#f44f6c':st==='prog'?'#4f8fff':'#4a5a72';
+    sbH+='<div class="sb-item" id="sb-'+t.id+'" onclick="hlTask(\''+t.id+'\')">'
+      +'<div class="sb-dot" style="background:'+dc+'"></div>'
+      +'<div style="flex:1;min-width:0">'
+        +'<div class="sb-nm">'+t.name+'</div>'
+        +'<div class="sb-dt">'+fmt(t.s)+' → '+fmt(t.e)+'</div>'
+      +'</div>'
+      +'<div class="sb-p">'+t.pct+'%</div>'
+      +'</div>';
+  }
+  document.getElementById('sbList').innerHTML=sbH;
 }
 
-// ── Tooltip ───────────────────────────────────────────────
-function showTip(e, id, type) {
-  const t = type === 'main'
-    ? MAIN_TASKS.find(x=>x.id===id)
-    : SUB_TASKS.find(x=>x.id===id);
-  if (!t) return;
-  const g = GROUPS.find(x=>x.id===t.group);
-  document.getElementById('tt-title').textContent  = t.name;
-  document.getElementById('tt-group').textContent  = g ? g.name.replace(/[^ ]*\s+/,'') : '';
-  document.getElementById('tt-start').textContent  = t.start;
-  document.getElementById('tt-end').textContent    = t.end;
-  document.getElementById('tt-days').textContent   = (t.days||'?') + ' days';
-  document.getElementById('tt-status').textContent = STATUS_MAP[t.status];
-  document.getElementById('tt-pct').textContent    = t.pct + '%';
-  document.getElementById('tooltip').classList.add('show');
-  moveTip(e);
+// ═══════════════════════════════════════════════════
+// INTERACTIONS
+// ═══════════════════════════════════════════════════
+function switchSheet(idx){
+  currentSheet=idx;
+  document.getElementById('stab0').className='stab'+(idx===0?' on':'');
+  document.getElementById('stab1').className='stab'+(idx===1?' on':'');
+  expandedGroups={}; expandedTasks={};
+  render();
 }
-function moveTip(e) {
-  const tip = document.getElementById('tooltip');
-  const x = Math.min(e.clientX + 14, window.innerWidth - 230);
-  tip.style.left = x + 'px';
-  tip.style.top  = (e.clientY - 50) + 'px';
+
+function applyFilter(el, f){
+  var tabs=document.querySelectorAll('.tab');
+  for(var i=0;i<tabs.length;i++) tabs[i].classList.remove('on');
+  el.classList.add('on');
+  currentFilter=f; render();
 }
-function hideTip() { document.getElementById('tooltip').classList.remove('show'); }
-document.addEventListener('mousemove', e => {
-  if (document.getElementById('tooltip').classList.contains('show')) moveTip(e);
+
+function setZoom(d){
+  zi=Math.max(0,Math.min(ZW.length-1,zi+d));
+  CW=ZW[zi];
+  document.getElementById('zmLbl').textContent=ZLB[zi];
+  render();
+}
+
+function toggleGroup(gid){
+  expandedGroups[gid]=(expandedGroups[gid]===false)?undefined:false;
+  render();
+}
+
+function toggleTask(tid){
+  expandedTasks[tid]=!expandedTasks[tid];
+  render();
+}
+
+function toggleExpand(){
+  allExpanded=!allExpanded;
+  document.getElementById('expandBtn').textContent=(allExpanded?'◀ Collapse All':'▶ Expand All');
+  var sh=SHEET();
+  for(var gi=0;gi<sh.groups.length;gi++){
+    var g=sh.groups[gi];
+    for(var ti=0;ti<g.tasks.length;ti++){
+      var t=g.tasks[ti];
+      if(t.subs) expandedTasks[t.id]=allExpanded;
+    }
+  }
+  render();
+}
+
+function hlTask(id){
+  var trs=document.querySelectorAll('.tr');
+  for(var i=0;i<trs.length;i++) trs[i].style.background='';
+  var crs=document.querySelectorAll('.cr');
+  for(var i=0;i<crs.length;i++) crs[i].style.background='';
+  var sbs=document.querySelectorAll('.sb-item');
+  for(var i=0;i<sbs.length;i++) sbs[i].classList.remove('hl');
+  var tl=document.getElementById('tl-'+id);
+  var cr=document.getElementById('cr-'+id);
+  var sb=document.getElementById('sb-'+id);
+  if(tl) tl.style.background='rgba(79,143,255,.06)';
+  if(cr) cr.style.background='rgba(79,143,255,.04)';
+  if(sb) sb.classList.add('hl');
+  var bar=document.getElementById('bar-'+id);
+  if(bar) bar.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});
+}
+
+// ── Tooltip ──
+function findTask(id){
+  var sheets=[SHEET0,SHEET1];
+  for(var si=0;si<sheets.length;si++){
+    var sh=sheets[si];
+    for(var gi=0;gi<sh.groups.length;gi++){
+      var g=sh.groups[gi];
+      for(var ti=0;ti<g.tasks.length;ti++){
+        var t=g.tasks[ti];
+        if(t.id===id) return t;
+        if(t.subs){
+          for(var xi=0;xi<t.subs.length;xi++){
+            if(t.subs[xi].id===id) return t.subs[xi];
+          }
+        }
+      }
+    }
+  }
+  return null;
+}
+
+var ttEl=document.getElementById('tt');
+function showTip(e,id,isSub){
+  var t=findTask(id);
+  if(!t) return;
+  var st=statusOf(t);
+  document.getElementById('ttH').textContent=t.name;
+  document.getElementById('ttS').textContent=fmt(t.s);
+  document.getElementById('ttF').textContent=fmt(t.e);
+  document.getElementById('ttD').textContent=(t.days||'—')+' days';
+  document.getElementById('ttSt').textContent=SL[st];
+  document.getElementById('ttP').textContent=t.pct+'%';
+  var pf=document.getElementById('ttPf');
+  pf.style.width=t.pct+'%';
+  pf.style.background=st==='done'?'#1fd6a0':st==='late'?'#f44f6c':'#4f8fff';
+  posTip(e); ttEl.classList.add('show');
+}
+function hideTip(){ ttEl.classList.remove('show'); }
+function posTip(e){
+  var x=e.clientX+14, y=e.clientY-50;
+  if(x+220>window.innerWidth) x=e.clientX-225;
+  if(y+190>window.innerHeight) y=e.clientY-170;
+  ttEl.style.left=x+'px'; ttEl.style.top=y+'px';
+}
+document.addEventListener('mousemove',function(e){
+  if(ttEl.classList.contains('show')) posTip(e);
 });
 
-// ── Modal ─────────────────────────────────────────────────
-function openModal() {
-  const today = new Date().toISOString().slice(0,10);
-  document.getElementById('m-start').value = today;
-  document.getElementById('m-end').value   = today;
-  document.getElementById('modalOverlay').classList.add('show');
+// ═══════════════════════════════════════════════════
+// THEME
+// ═══════════════════════════════════════════════════
+var isLight = false;
+function toggleTheme(){
+  isLight = !isLight;
+  document.body.classList.toggle('light', isLight);
+  document.getElementById('themeIcon').textContent = isLight ? '☀️' : '🌙';
+  try { localStorage.setItem('ntl-theme', isLight ? 'light' : 'dark'); } catch(e){}
 }
-function closeModal() { document.getElementById('modalOverlay').classList.remove('show'); }
-function closeModalOutside(e) { if (e.target.id==='modalOverlay') closeModal(); }
-
-function addTask() {
-  const name   = document.getElementById('m-name').value.trim();
-  const start  = document.getElementById('m-start').value;
-  const end    = document.getElementById('m-end').value;
-  const group  = document.getElementById('m-group').value;
-  const cat    = document.getElementById('m-cat').value;
-  const status = document.getElementById('m-status').value;
-  if (!name || !start || !end) return;
-
-  const s = parseD(start), e2 = parseD(end);
-  const days = Math.round((e2 - s) / 86400000);
-
-  MAIN_TASKS.push({ id:'t'+(MAIN_TASKS.length+100), group, name, start, end, days, pct:0, status, cat, parent:null });
-
-  if (s < PROJECT_START) PROJECT_START = s;
-  if (e2 > PROJECT_END)  PROJECT_END   = e2;
-
-  closeModal();
-  build();
-}
-
-// ── Theme Toggle ──────────────────────────────────────────
-function toggleTheme() {
-  document.body.classList.toggle('light');
-  const isLight = document.body.classList.contains('light');
-  document.getElementById('themeIcon').textContent    = isLight ? '☀️' : '🌙';
-  document.getElementById('themeIconDay').textContent = isLight ? '🌙' : '☀️';
-  localStorage.setItem('ntl-theme', isLight ? 'light' : 'dark');
-}
-
-// Restore saved theme
-(function() {
-  const saved = localStorage.getItem('ntl-theme');
-  if (saved === 'light') {
+// restore saved theme
+try {
+  if(localStorage.getItem('ntl-theme')==='light'){
+    isLight=true;
     document.body.classList.add('light');
-    document.getElementById('themeIcon').textContent    = '☀️';
-    document.getElementById('themeIconDay').textContent = '🌙';
+    document.getElementById('themeIcon').textContent='☀️';
   }
-})();
+} catch(e){}
 
-// ── Filters ───────────────────────────────────────────────
-function filterTasks(filter, el) {
-  activeFilter = filter;
-  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-  el.classList.add('active');
-  build();
-}
-
-function selectProject(el, loc) {
-  activeLocation = loc;
-  document.querySelectorAll('.project-card').forEach(c=>c.classList.remove('active'));
-  el.classList.add('active');
-  build();
-}
-
-// ── Init ──────────────────────────────────────────────────
-build();
-
-// Scroll to today on load
-setTimeout(() => {
-  const todayX = dayToX(new Date());
-  document.getElementById('ganttWrap').scrollLeft = Math.max(0, todayX - 200);
-}, 100);
+// ═══════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════
+render();
 </script>
 </body>
 </html>
